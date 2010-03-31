@@ -56,9 +56,19 @@ namespace pattern {
                         return *this;
                     }
 
+                    inline basic_subject& attach(observer_t* o) {
+                        observers.push_back(o);
+                        return *this;
+                    }
+
                     // release an observer
                     inline basic_subject& detach(observer_t& o) {
                         observers.remove(&o);
+                        return *this;
+                    }
+
+                    inline basic_subject& detach(observer_t* o) {
+                        observers.remove(o);
                         return *this;
                     }
 
