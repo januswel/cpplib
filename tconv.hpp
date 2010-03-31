@@ -9,42 +9,55 @@
 #ifndef TCONV_HPP
 #define TCONV_HPP
 
+#include <locale>
 #include <sstream>
 #include <string>
 
 namespace util {
     namespace string {
+        // definitions of character traits
         template<typename Ch> struct char_traits {};
         template<> struct char_traits<char> {
-            typedef char              char_type;
-            typedef std::string       string_type;
-            typedef std::stringstream stream_type;
-            static const char_type* null() { return ""; }
+            typedef char                char_t;
+            typedef std::string         string_t;
+            typedef std::stringstream   stream_t;
+            inline static const char_t* null() { return ""; }
         };
         template<> struct char_traits<wchar_t> {
-            typedef wchar_t            char_type;
-            typedef std::wstring       string_type;
-            typedef std::wstringstream stream_type;
-            static const char_type* null() { return L""; }
+            typedef wchar_t             char_t;
+            typedef std::wstring        string_t;
+            typedef std::wstringstream  stream_t;
+            inline static const char_t* null() { return L""; }
         };
 
+        // type converter
         template<typename Ch, typename Tr = char_traits<Ch> >
             class basic_tconv {
                 private:
-                    typename Tr::stream_type ss;
+                    // for convenience
+                    typedef typename Tr::char_t     char_t;
+                    typedef typename Tr::string_t   string_t;
+                    typedef typename Tr::stream_t   stream_t;
+                    inline const char_t* null() { return Tr::null(); }
+
+                    // member variables
+                    stream_t ss;
 
                 public:
+                    // constructor
+                    basic_tconv(void) {}
+                    explicit basic_tconv(std::locale loc) { ss.imbue(loc); }
+
                     template<typename T>
-                        typename Tr::string_type strfrom(T num) {
-                            static const typename Tr::string_type null = Tr::null();
-                            ss.clear(); ss.str(null);
+                        string_t strfrom(T num) {
+                            ss.clear(); ss.str(null());
 
                             ss << num;
                             return ss.str();
                         }
 
                     template<typename T>
-                        T strto(const typename Tr::string_type& str) {
+                        T strto(const string_t& str) {
                             ss.clear();
 
                             ss.str(str);
