@@ -48,6 +48,9 @@ namespace util {
                     basic_tconv(void) {}
                     explicit basic_tconv(std::locale loc) { ss.imbue(loc); }
 
+                    // specified type -> std::basic_string
+                    // This can be omitted specifying T because tye type
+                    // inference always works.
                     template<typename T>
                         string_t strfrom(T num) {
                             ss.clear(); ss.str(null());
@@ -56,6 +59,8 @@ namespace util {
                             return ss.str();
                         }
 
+                    // std::basic_string -> specified type
+                    // This must be specified T
                     template<typename T>
                         T strto(const string_t& str) {
                             ss.clear();
@@ -67,6 +72,7 @@ namespace util {
                         }
             };
 
+        // for convenience
         typedef basic_tconv<char>    tconv;
         typedef basic_tconv<wchar_t> wtconv;
     }
