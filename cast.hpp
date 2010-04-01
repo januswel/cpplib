@@ -1,4 +1,5 @@
 /*
+ * cast.hpp
  * Additional casts.
  *
  * written by janus_wel<janus.wel.3@gmail.com>
@@ -24,3 +25,4 @@ namespace util {
 }
 
 #endif // CAST_H
+

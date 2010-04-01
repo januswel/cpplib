@@ -1,4 +1,5 @@
 /*
+ * gcd.hpp
  * The function to get Greatest Common Divisor
  *
  * written by janus_wel<janus.wel.3@gmail.com>
