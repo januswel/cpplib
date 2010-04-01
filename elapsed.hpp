@@ -18,7 +18,7 @@ namespace util {
                 std::time_t base;
 
             public:
-                inline elapsed(void) { base(); }
+                inline elapsed(void) { reset(); }
                 inline void reset(void) { std::time(&base); }
 
                 /*
