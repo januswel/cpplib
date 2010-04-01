@@ -18,21 +18,12 @@
 
 // typical tricks
 #ifdef DEBUG
-#   ifdef _MSC_VER
-#       define DBGLOG(str)  (util::log::dflogger::logger()              \
-                                << __FILE__ << "(" << __LINE__ << "): " \
-                                << __FUNCTION__ << " : " << str << std::endl)
-#       define WDBGLOG(str) (util::log::wdflogger::logger()             \
-                                << __FILE__ << "(" << __LINE__ << "): " \
-                                << __FUNCTION__ << " : " << str << std::endl)
-#   else
-#       define DBGLOG(str)  (util::log::dflogger::logger()              \
-                                << __FILE__ << "(" << __LINE__ << "): " \
-                                << __func__ << " : " << str << std::endl)
-#       define WDBGLOG(str) (util::log::wdflogger::logger()             \
-                                << __FILE__ << "(" << __LINE__ << "): " \
-                                << __func__ << " : " << str << std::endl)
-#   endif
+#   define DBGLOG(str)  (util::log::dflogger::logger()              \
+                            << __FILE__ << "(" << __LINE__ << "): " \
+                            << str << std::endl)
+#   define WDBGLOG(str) (util::log::wdflogger::logger()             \
+                            << __FILE__ << "(" << __LINE__ << "): " \
+                            << str << std::endl)
 #else
 #   define DBGLOG(str)
 #   define WDBGLOG(str)
