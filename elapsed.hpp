@@ -15,16 +15,26 @@ namespace util {
     namespace time {
         class elapsed {
             private:
-                std::time_t basis;
+                std::time_t base;
 
             public:
-                inline elapsed(void) { set(); }
-                inline void set(void) { std::time(&basis); }
+                inline elapsed(void) { base(); }
+                inline void reset(void) { std::time(&base); }
 
-                double get(void) const {
+                /*
+                 *  A return type of this function is __int64
+                 *  (maybe, long int), because:
+                 *
+                 *      - The return type of std::difftime(2) is double.
+                 *      - The significand of double is represented by 52 bits.
+                 *
+                 *  So the smallest type that represents all values of 52 bits
+                 *  is __int64.
+                 *  */
+                inline unsigned __int64 operator()(void) const {
                     std::time_t current;
                     std::time(&current);
-                    return std::difftime(current, basis);
+                    return static_cast<unsigned __int32>(std::difftime(current, base));
                 }
         };
     }
