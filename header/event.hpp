@@ -75,12 +75,12 @@ namespace pattern {
                 }
 
                 // release an event listner
-                inline this_t& remove_listener(listener_t& l) {
+                inline this_t& remove_event_listener(listener_t& l) {
                     listeners.remove(&l);
                     return *this;
                 }
 
-                inline this_t& remove_listener(listener_t* l) {
+                inline this_t& remove_event_listener(listener_t* l) {
                     listeners.remove(l);
                     return *this;
                 }
