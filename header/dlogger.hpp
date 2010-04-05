@@ -1,23 +1,21 @@
 /*
  * dlogger.hpp
- * The macros and classes to log for debugging
+ *  The macros and classes to log for debugging
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is in public domain, and has NO WARRANTY.
+ *  In order to disable, define the symbol NDEBUG:
+ *
+ *      > g++ -Wall --pedantic -DNDEBUG main.cpp
+ *      > cl /EHsc /W4 /DNDEBUG main.cpp
+ *
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is in public domain, and has NO WARRANTY.
  * */
 
 #ifndef DLOGGER_HPP
 #define DLOGGER_HPP
 
-// for visual studio environment
-#ifdef _DEBUG
-#   ifdef _MSC_VER
-#       define DEBUG
-#   endif
-#endif
-
 // typical tricks
-#ifdef DEBUG
+#ifndef NDEBUG
 #   define DBGLOG(str)  (util::log::dflogger::logger()              \
                             << __FILE__ << "(" << __LINE__ << "): " \
                             << str << std::endl)
@@ -30,7 +28,7 @@
 #endif
 
 // class definition
-#ifdef DEBUG
+#ifndef NDEBUG
 
 #include <fstream>
 
@@ -59,7 +57,7 @@ namespace util {
     }
 }
 
-#endif // DEBUG
+#endif // NDEBUG
 
 #endif // DLOGGER_HPP
 
