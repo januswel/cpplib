@@ -1,9 +1,9 @@
 /*
  * tconv.hpp
- * type converter by routing through std::string / std::wstring
+ *  a class to convert types by routing through std::string / std::wstring
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is in the public domain, and has NO WARRANTY.
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is in the public domain, and has NO WARRANTY.
  * */
 
 #ifndef TCONV_HPP

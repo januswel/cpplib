@@ -1,9 +1,9 @@
 /*
  * wexcept.hpp
- * Classes to handle exceptions with const wchar_t* messages
+ *  classes to handle exceptions with const wchar_t* messages
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is in the public domain, and has NO WARRANTY.
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is in the public domain, and has NO WARRANTY.
  * */
 
 #ifndef WEXCEPT_HPP

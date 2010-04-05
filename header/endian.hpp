@@ -1,12 +1,12 @@
 /*
  * endian.hpp
- * Some functions for handling endian.
+ *  some functions to handle endian
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is NOT MY COPYRIGHTED WORK, and has NO WARRANTY.
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is NOT MY COPYRIGHTED WORK, and has NO WARRANTY.
  *
- * Refer - a source of an idea:
- *  http://www.kijineko.co.jp/tech/cpptempls/endian
+ *  Refer - a source of an idea:
+ *      http://www.kijineko.co.jp/tech/cpptempls/endian
  * */
 
 #ifndef ENDIAN_H

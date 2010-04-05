@@ -1,9 +1,9 @@
 /*
  * gcd.hpp
- * The function to get Greatest Common Divisor
+ *  a function to get Greatest Common Divisor
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is in public domain, and has NO WARRANTY.
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is in public domain, and has NO WARRANTY.
  * */
 
 #ifndef GCD_HPP

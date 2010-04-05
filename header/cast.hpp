@@ -1,12 +1,12 @@
 /*
  * cast.hpp
- * Additional casts.
+ *  additional casts
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is NOT MY COPYRIGHTED WORK, and has NO WARRANTY.
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is NOT MY COPYRIGHTED WORK, and has NO WARRANTY.
  *
- * Refer - a source of an idea:
- *  http://www.geocities.jp/KY_webid/cpp/language/024.html#use_template_func
+ *  Refer - a source of an idea:
+ *      http://www.geocities.jp/KY_webid/cpp/language/024.html#use_template_func
  * */
 
 #ifndef CAST_H

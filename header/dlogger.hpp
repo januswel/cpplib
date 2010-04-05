@@ -1,6 +1,6 @@
 /*
  * dlogger.hpp
- *  The macros and classes to log for debugging
+ *  the macros and classes to log for debugging
  *
  *  In order to disable, define the symbol NDEBUG:
  *

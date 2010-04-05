@@ -1,9 +1,9 @@
 /*
  * elapsed.hpp
- * a timer that has second precision
+ *  a class to measure time that has second precision
  *
- * written by janus_wel<janus.wel.3@gmail.com>
- * This source code is in the public domain, and has NO WARRANTY.
+ *  written by janus_wel<janus.wel.3@gmail.com>
+ *  This source code is in the public domain, and has NO WARRANTY.
  * */
 
 #ifndef ELAPSED_HPP
