@@ -64,12 +64,12 @@ namespace pattern {
                 virtual ~event_source(void) {}
 
                 // register an event listner
-                inline this_t& add_listener(listener_t& l) {
+                inline this_t& add_event_listener(listener_t& l) {
                     listeners.push_back(&l);
                     return *this;
                 }
 
-                inline this_t& add_listener(listener_t* l) {
+                inline this_t& add_event_listener(listener_t* l) {
                     listeners.push_back(l);
                     return *this;
                 }
@@ -125,7 +125,7 @@ namespace pattern {
             public:
                 // a virtual function which should be implemented by derived
                 // classes
-                virtual void handle(const event_t& e) = 0;
+                virtual void handle(const event_t&) = 0;
         };
     }
 }
