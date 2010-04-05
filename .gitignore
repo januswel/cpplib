@@ -1,0 +1,8 @@
+# obj
+*.obj
+
+# for Windows
+*.exe
+
+# for Vim
+.*.swp
