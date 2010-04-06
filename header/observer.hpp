@@ -62,23 +62,23 @@ namespace pattern {
                 virtual ~basic_subject(void) {}
 
                 // register an observer
-                inline this_t& attach(observer_t& o) {
+                this_t& attach(observer_t& o) {
                     observers.push_back(&o);
                     return *this;
                 }
 
-                inline this_t& attach(observer_t* o) {
+                this_t& attach(observer_t* o) {
                     observers.push_back(o);
                     return *this;
                 }
 
                 // release an observer
-                inline this_t& detach(observer_t& o) {
+                this_t& detach(observer_t& o) {
                     observers.remove(&o);
                     return *this;
                 }
 
-                inline this_t& detach(observer_t* o) {
+                this_t& detach(observer_t* o) {
                     observers.remove(o);
                     return *this;
                 }
@@ -118,10 +118,10 @@ namespace pattern {
 
                 // Objects of this class are identified by the memory
                 // address of its instance.
-                inline bool operator==(const this_t& rhs) const {
+                bool operator==(const this_t& rhs) const {
                     return this == &rhs;
                 }
-                inline bool operator!=(const this_t& rhs) const {
+                bool operator!=(const this_t& rhs) const {
                     return !(*this == rhs);
                 }
 

@@ -44,8 +44,8 @@ namespace util {
 
                 // static functions
                 // fixed filename
-                inline static const char* filename(void) { return "debug.log"; }
-                inline static ofstream_t& logger(void) {
+                static const char* filename(void) { return "debug.log"; }
+                static ofstream_t& logger(void) {
                     static ofstream_t logger(filename(), std::ios::out | std::ios::trunc);
                     return logger;
                 }

@@ -29,15 +29,15 @@ namespace util {
                     typedef std::basic_string<extern_t>     exstring_t;
 
                     // cache a reference and objects
-                    inline const codecvt_t& codecvt(void) const {
+                    const codecvt_t& codecvt(void) const {
                         static const codecvt_t& conv = std::use_facet<codecvt_t>(loc);
                         return conv;
                     }
-                    inline state_t& in_state(void) const {
+                    state_t& in_state(void) const {
                         static state_t in_stat;
                         return in_stat;
                     }
-                    inline state_t& out_state(void) const {
+                    state_t& out_state(void) const {
                         static state_t out_stat;
                         return out_stat;
                     }

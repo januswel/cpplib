@@ -64,23 +64,23 @@ namespace pattern {
                 virtual ~event_source(void) {}
 
                 // register an event listner
-                inline this_t& add_event_listener(listener_t& l) {
+                this_t& add_event_listener(listener_t& l) {
                     listeners.push_back(&l);
                     return *this;
                 }
 
-                inline this_t& add_event_listener(listener_t* l) {
+                this_t& add_event_listener(listener_t* l) {
                     listeners.push_back(l);
                     return *this;
                 }
 
                 // release an event listner
-                inline this_t& remove_event_listener(listener_t& l) {
+                this_t& remove_event_listener(listener_t& l) {
                     listeners.remove(&l);
                     return *this;
                 }
 
-                inline this_t& remove_event_listener(listener_t* l) {
+                this_t& remove_event_listener(listener_t* l) {
                     listeners.remove(l);
                     return *this;
                 }
@@ -115,10 +115,10 @@ namespace pattern {
 
                 // Objects of this class are identified by the memory address
                 // of its instance.
-                inline bool operator==(const this_t& rhs) const {
+                bool operator==(const this_t& rhs) const {
                     return this == &rhs;
                 }
-                inline bool operator!=(const this_t& rhs) const {
+                bool operator!=(const this_t& rhs) const {
                     return !(*this == rhs);
                 }
 

@@ -21,13 +21,13 @@ namespace util {
             typedef char                char_t;
             typedef std::string         string_t;
             typedef std::stringstream   stream_t;
-            inline static const char_t* null() { return ""; }
+            static const char_t* null() { return ""; }
         };
         template<> struct char_traits<wchar_t> {
             typedef wchar_t             char_t;
             typedef std::wstring        string_t;
             typedef std::wstringstream  stream_t;
-            inline static const char_t* null() { return L""; }
+            static const char_t* null() { return L""; }
         };
 
         // type converter
@@ -38,7 +38,6 @@ namespace util {
                     typedef typename Tr::char_t     char_t;
                     typedef typename Tr::string_t   string_t;
                     typedef typename Tr::stream_t   stream_t;
-                    inline const char_t* null() { return Tr::null(); }
 
                     // member variables
                     stream_t ss;
@@ -53,7 +52,7 @@ namespace util {
                     // inference always works.
                     template<typename T>
                         string_t strfrom(T num) {
-                            ss.clear(); ss.str(null());
+                            ss.clear(); ss.str(Tr::null());
 
                             ss << num;
                             return ss.str();
