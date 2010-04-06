@@ -23,17 +23,19 @@ namespace pattern {
          *
          *      1. Define the class or struct that is derived from this class.
          *      2. Define a new member function that creates some event object
-         *         and send it by using the member function dispatch(1).
+         *         and send it by using the member function dispatch_event(1).
          *
          *  where event object is user-defined.
          * */
         template<typename T> class event_source {
             public:
-                // typedefs
                 typedef T                           event_t;
-                typedef event_source<event_t>       this_t;
                 typedef event_listener<event_t>     listener_t;
 
+            private:
+                typedef event_source<event_t>       this_t;
+
+            protected:
                 /*
                  * I think that std::list is best container to contain event
                  * listeners, because:
@@ -87,11 +89,11 @@ namespace pattern {
 
             protected:
                 // send the event to event listners
-                void dispatch(const event_t& e) {
+                void dispatch_event(const event_t& e) {
                     for (listener_array_iterator it = listeners.begin();
                             it != listeners.end();
                             ++it) {
-                        (*it)->handle(e);
+                        (*it)->handle_event(e);
                     }
                 }
         };
@@ -101,12 +103,13 @@ namespace pattern {
          *  To use:
          *
          *      1. Define the class or struct that is derived from this class.
-         *      2. Implement the member function handle(1).
+         *      2. Implement the member function handle_event(1).
          * */
         template<typename T> class event_listener {
             public:
-                // typedefs
                 typedef T                       event_t;
+
+            private:
                 typedef event_listener<event_t> this_t;
 
             public:
@@ -125,7 +128,7 @@ namespace pattern {
             public:
                 // a virtual function which should be implemented by derived
                 // classes
-                virtual void handle(const event_t&) = 0;
+                virtual void handle_event(const event_t&) = 0;
         };
     }
 }

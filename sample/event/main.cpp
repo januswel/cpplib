@@ -35,8 +35,8 @@ const char* language_name(const language_t lang) {
 
 class Language : public pattern::event::event_source<language_t> {
     public:
-        Language(language_t lang = ENGLISH) { dispatch(lang); }
-        void set(language_t lang) { dispatch(lang); }
+        Language(language_t lang = ENGLISH) { dispatch_event(lang); }
+        void set(language_t lang) { dispatch_event(lang); }
 };
 
 class Fruit : public pattern::event::event_listener<language_t> {
@@ -52,7 +52,7 @@ class Fruit : public pattern::event::event_listener<language_t> {
         virtual const char* name(void) const = 0;
 
         // implementation of virtual function
-        void handle(const language_t& l) { lang = l; }
+        void handle_event(const language_t& l) { lang = l; }
 };
 
 std::ostream& operator<< (std::ostream& out, const Fruit& f) {
