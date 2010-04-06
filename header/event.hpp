@@ -48,8 +48,8 @@ namespace pattern {
                  *        that randome access is slow.
                  *      - Adding and removing items are fast.
                  *  */
-                typedef std::list<listener_t*>      listener_array_t;
-                typedef typename listener_array_t::iterator  listener_array_it_t;
+                typedef std::list<listener_t*>              listener_array_t;
+                typedef typename listener_array_t::iterator listener_array_iterator;
 
             protected:
                 // an array of listners;
@@ -88,7 +88,7 @@ namespace pattern {
             protected:
                 // send the event to event listners
                 void dispatch(const event_t& e) {
-                    for (listener_array_it_t it = listeners.begin();
+                    for (listener_array_iterator it = listeners.begin();
                             it != listeners.end();
                             ++it) {
                         (*it)->handle(e);

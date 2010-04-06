@@ -51,7 +51,7 @@ namespace pattern {
                  *      - Adding and removing items are fast.
                  *  */
                 typedef std::list<observer_t*>              observer_array_t;
-                typedef typename observer_array_t::iterator observer_array_it_t;
+                typedef typename observer_array_t::iterator observer_array_iterator;
 
             protected:
                 // a list of observers
@@ -87,7 +87,7 @@ namespace pattern {
                 // Should we use std::for_each(3) ?
                 void notify(void) {
                     state_t s = state();
-                    for (observer_array_it_t it = observers.begin();
+                    for (observer_array_iterator it = observers.begin();
                             it != observers.end();
                             ++it) {
                         (*it)->update(s);
