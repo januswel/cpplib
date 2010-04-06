@@ -25,17 +25,20 @@ namespace pattern {
          *      2. Define new member variables to indicates the state of the
          *         object and new member functions to change states if those
          *         variables aren't public.
-         *      3. Implement the member function state(0). This function must
-         *         return the value that is contained in the derived class as
-         *         member variables.
+         *      3. Implement the member function subject_state(0). This
+         *         function must return the value that is contained in the
+         *         derived class as member variables.
          * */
         template<typename T> class basic_subject {
             public:
                 // typedefs
                 typedef T                       state_t;
-                typedef basic_subject<state_t>  this_t;
                 typedef basic_observer<state_t> observer_t;
 
+            private:
+                typedef basic_subject<state_t>  this_t;
+
+            protected:
                 /*
                  *  I think that std::list is best container to contain
                  *  observers, because:
@@ -62,41 +65,41 @@ namespace pattern {
                 virtual ~basic_subject(void) {}
 
                 // register an observer
-                this_t& attach(observer_t& o) {
+                this_t& attach_observer(observer_t& o) {
                     observers.push_back(&o);
                     return *this;
                 }
 
-                this_t& attach(observer_t* o) {
+                this_t& attach_observer(observer_t* o) {
                     observers.push_back(o);
                     return *this;
                 }
 
                 // release an observer
-                this_t& detach(observer_t& o) {
+                this_t& detach_observer(observer_t& o) {
                     observers.remove(&o);
                     return *this;
                 }
 
-                this_t& detach(observer_t* o) {
+                this_t& detach_observer(observer_t* o) {
                     observers.remove(o);
                     return *this;
                 }
 
                 // notice the current states to all of observers
                 // Should we use std::for_each(3) ?
-                void notify(void) {
-                    state_t s = state();
+                void notify_state(void) {
+                    state_t s = subject_state();
                     for (observer_array_iterator it = observers.begin();
                             it != observers.end();
                             ++it) {
-                        (*it)->update(s);
+                        (*it)->update_state(s);
                     }
                 }
 
             protected:
                 // the member function to get current (latest) states
-                virtual const state_t& state(void) const = 0;
+                virtual const state_t& subject_state(void) const = 0;
         };
 
         /*
@@ -128,7 +131,7 @@ namespace pattern {
             public:
                 // a virtual function which should be implemented by
                 // derived classes
-                virtual void update(const state_t& s) = 0;
+                virtual void update_state(const state_t& s) = 0;
         };
     }
 }

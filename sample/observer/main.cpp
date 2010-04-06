@@ -40,11 +40,11 @@ class Language : public pattern::observer::basic_subject<language_t> {
     protected:
         // implementation of virtual function
         // tell what object represents a state to basic_subject
-        const state_t& state(void) const { return lang; }
+        const state_t& subject_state(void) const { return lang; }
 
     public:
-        Language(language_t lang = ENGLISH) : lang(lang) { notify(); }
-        void set(language_t lang) { this->lang = lang; notify(); }
+        Language(language_t lang = ENGLISH) : lang(lang) { notify_state(); }
+        void set(language_t lang) { this->lang = lang; notify_state(); }
         const char* what(void) const { return language_name(lang); }
 };
 
@@ -65,7 +65,7 @@ class Fruit : public pattern::observer::basic_observer<language_t> {
         virtual const char* name(void) const = 0;
 
         // implementation of virtual function
-        void update(const state_t& s) { lang = s; }
+        void update_state(const state_t& s) { lang = s; }
 };
 
 std::ostream& operator<< (std::ostream& out, const Fruit& f) {
@@ -133,7 +133,10 @@ int main(void) {
     // build language selector
     Language lang;
     // register fruits
-    lang.attach(apple).attach(orange).attach(banana);
+    lang
+        .attach_observer(apple)
+        .attach_observer(orange)
+        .attach_observer(banana);
 
     // register all languages
     typedef std::vector<language_t> lang_list_t;
@@ -157,7 +160,7 @@ int main(void) {
     }
 
     // release apple
-    lang.detach(apple);
+    lang.detach_observer(apple);
 
     // print in Japanese
     lang.set(JAPANESE);
