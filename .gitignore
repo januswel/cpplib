@@ -4,5 +4,11 @@
 # for Windows
 *.exe
 
+# for gcc
+a.out
+
 # for Vim
 .*.swp
+
+# for dlogger.hpp
+debug.log
