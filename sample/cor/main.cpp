@@ -35,7 +35,7 @@ class PrimeNumber : public pattern::cor::basic_handler<bool, unsigned int> {
             return (n % value) == 0;
         }
         bool is_need_data(void) const { return false; }
-        bool handle_responsibility(void) {
+        bool handle_responsibility(const data_t&) {
             DBGLOG("handle(" << value << ")");
             return false;
         }

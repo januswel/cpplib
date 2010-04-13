@@ -27,16 +27,8 @@ namespace pattern {
          *              - must return true if the sub class has the
          *                responsibility to handle the passed data.
          *              - otherwise false.
-         *          - is_need_data(void)
-         *              - must return true if the sub class needs data to
-         *                handle responsibility.
-         *              - otherwise false.
          *          - handle_responsibility(const data_t&)
-         *              - should be overridden if is_need_data(void) returns
-         *                true.
-         *          - handle_responsibility(void)
-         *              - should be overridden if is_need_data(void) returns
-         *                false.
+         *              - process the data.
          *
          *      3. Create objects of the sub classes and enlink(1) by
          *         basic_chain.
@@ -55,20 +47,8 @@ namespace pattern {
                 // class.  Otherwise false.
                 virtual bool is_in_charge(const data_t&) const = 0;
 
-                // the choice to use handle_responsibility(const data_t&) or
-                // handle_responsibility(void)
-                virtual bool is_need_data(void) const = 0;
-
-                // the class basic_chain use this if is_need_data(void) is true
                 // the procedure to handle the data.
-                virtual return_t handle_responsibility(const data_t&) {
-                    throw std::logic_error("Override pattern::cor::basic_handler::handle_responsibility(const data_t&).");
-                }
-                // the class basic_chain use this if is_need_data(void) is false
-                // use this member function when you don't need data
-                virtual return_t handle_responsibility(void) {
-                    throw std::logic_error("Override pattern::cor::basic_handler::handle_responsibility(void).");
-                }
+                virtual return_t handle_responsibility(const data_t&) = 0;
         };
 
         /*
@@ -139,9 +119,7 @@ namespace pattern {
                             ++it) {
                         const handler_ptr_t& item = *it;
                         if (item->is_in_charge(data)) {
-                            return item->is_need_data()
-                                ? item->handle_responsibility(data)
-                                : item->handle_responsibility();
+                            return item->handle_responsibility(data);
                         }
                     }
                     return at_end_of_chain(data);
@@ -197,9 +175,7 @@ namespace pattern {
                             ++it) {
                         const handler_ptr_t& item = *it;
                         if (item->is_in_charge(data)) {
-                            item->is_need_data()
-                                ? item->handle_responsibility(data)
-                                : item->handle_responsibility();
+                            item->handle_responsibility(data);
                         }
                     }
                     at_end_of_chain(data);
