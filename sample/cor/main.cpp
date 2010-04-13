@@ -67,7 +67,7 @@ class PrimeNumbers : public pattern::cor::basic_chain<bool, unsigned int> {
 
     protected:
         // implementations of virtual functions
-        bool at_end_of_chain(void) { return true; }
+        bool at_end_of_chain(const data_t&) { return true; }
 };
 
 int main(const int argc, const char* const argv[]) {
