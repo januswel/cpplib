@@ -184,12 +184,17 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
 
     protected:
         // non-option handler
-        unsigned int handle_nonopt(const parameters_t& params, bool is_unknown_opt) {
+        unsigned int handle_nonopt(const parameters_t& params) {
             DBGLOG("handle_nonopt");
 
-            if (is_unknown_opt) throw std::runtime_error("unknown option: " + *(params.current()));
+            const string_t& current = *(params.current());
+
+            if (option_t::has_opt_prefix(current)) {
+                throw std::runtime_error("unknown option: " + current);
+            }
+
             if (params.current() + 1 == params.end()) {
-                mv_input = *(params.current());
+                mv_input = current;
                 return 1;
             }
             else {

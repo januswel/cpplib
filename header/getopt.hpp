@@ -225,7 +225,7 @@ namespace util {
 
             protected:
                 // member functions to be overridden
-                virtual unsigned int handle_nonopt(const parameters_t&, bool) = 0;
+                virtual unsigned int handle_nonopt(const parameters_t&) = 0;
 
             public:
                 // typical destructor
@@ -235,11 +235,7 @@ namespace util {
                 // implementations for the virtual member functions of the
                 // super class
                 unsigned int at_end_of_chain(const parameters_t& params) {
-                    const string_t& current = *(params.current());
-                    bool is_unknown_opt = option_t::has_opt_prefix(current)
-                        ? true
-                        : false;
-                    return handle_nonopt(params, is_unknown_opt);
+                    return handle_nonopt(params);
                 }
 
             public:
