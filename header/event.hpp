@@ -130,6 +130,21 @@ namespace pattern {
                 // classes
                 virtual void handle_event(const event_t&) = 0;
         };
+
+        // event template
+        template<typename kindT, typename dataT> struct basic_event {
+            typedef kindT kind_t;
+            typedef dataT data_t;
+            kind_t kind;
+            data_t data;
+        };
+
+        // partial specialization where dataT = void
+        template<typename kindT> struct basic_event<kindT, void> {
+            typedef kindT   kind_t;
+            typedef void    data_t;
+            kind_t kind;
+        };
     }
 }
 
