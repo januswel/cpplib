@@ -31,6 +31,7 @@ enum event_kind_t {
     VERSION,
     HELP,
     SIZE,
+    INPUT,
     OUTPUT
 };
 
@@ -47,8 +48,8 @@ typedef pattern::event::basic_event<event_kind_t, std::string>  EventStr;
 typedef pattern::event::event_listener<EventStr>                EventListenerStr;
 typedef pattern::event::event_source<EventStr>                  EventSourceStr;
 
-// my getopt definition
-class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUint, EventListenerStr {
+// a class to contain states of options
+class OptState : public EventListenerVoid, public EventListenerUint, public EventListenerStr {
     private:
         // variables to contain option values
         bool mv_version;
@@ -64,6 +65,10 @@ class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUi
         unsigned int size(void) { return mv_size; }
         const std::string& input(void) { return mv_input; }
         const std::string& output(void) { return mv_output; }
+
+    public:
+        OptState(void)
+            : mv_version(false), mv_help(false), mv_size(4096), mv_input("") {}
 
     public:
         // event handlers
@@ -85,9 +90,18 @@ class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUi
 
         void handle_event(const EventStr& event) {
             DBGLOG("handle_event(const EventStr&)");
-            mv_output = event.data;
+            switch (event.kind) {
+                case INPUT:     mv_input = event.data;
+                                break;
+                case OUTPUT:    mv_output = event.data;
+                                break;
+                default:        throw std::logic_error("unknown event");
+            }
         }
+};
 
+// my getopt definition
+class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
     private:
         // option definition
         class OptVersion : public option_t, public EventSourceVoid {
@@ -181,7 +195,8 @@ class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUi
             }
 
             if (params.current() + 1 == params.end()) {
-                mv_input = current;
+                EventStr event = {INPUT, current};
+                dispatch_event(event);
                 return 1;
             }
             else {
@@ -191,22 +206,22 @@ class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUi
 
     public:
         // constructor
-        MyGetOpt(void)
-            : mv_version(false), mv_help(false), mv_size(4096), mv_input("") {
-                DBGLOG("MyGetOpt::MyGetOpt");
+        MyGetOpt(OptState& os) {
+            DBGLOG("MyGetOpt::MyGetOpt");
 
-                // register event listners
-                opt_version.add_event_listener(this);
-                opt_help.add_event_listener(this);
-                opt_size.add_event_listener(this);
-                opt_output.add_event_listener(this);
+            // register event listners
+            opt_version.add_event_listener(os);
+            opt_help.add_event_listener(os);
+            opt_size.add_event_listener(os);
+            opt_output.add_event_listener(os);
+            this->add_event_listener(os);
 
-                // register options
-                register_option(opt_version);
-                register_option(opt_help);
-                register_option(opt_size);
-                register_option(opt_output);
-            }
+            // register options
+            register_option(opt_version);
+            register_option(opt_help);
+            register_option(opt_size);
+            register_option(opt_output);
+        }
 
         // destructor
         ~MyGetOpt(void) {
@@ -216,15 +231,16 @@ class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUi
 
 int main(const int argc, const char* const argv[]) {
     try {
-        MyGetOpt opt;
+        OptState os;
+        MyGetOpt opt(os);
         opt.analyze(argc, argv);
 
         std::cout << std::left << std::boolalpha
-            << std::setw(10) << "version"    << opt.version() << "\n"
-            << std::setw(10) << "help"       << opt.help() << "\n"
-            << std::setw(10) << "size"       << opt.size() << "\n"
-            << std::setw(10) << "input"      << opt.input() << "\n"
-            << std::setw(10) << "output"     << opt.output() << "\n"
+            << std::setw(10) << "version"    << os.version() << "\n"
+            << std::setw(10) << "help"       << os.help() << "\n"
+            << std::setw(10) << "size"       << os.size() << "\n"
+            << std::setw(10) << "input"      << os.input() << "\n"
+            << std::setw(10) << "output"     << os.output() << "\n"
             << std::endl;
     }
     catch (const std::exception& ex) {
