@@ -12,6 +12,7 @@
 
 #include "cor.hpp"
 
+#include <cassert>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -259,8 +260,7 @@ namespace util {
                     unsigned int processed = 0;
                     while (params.current() != params.end()) {
                         unsigned int n = request_to_chain(params);
-                        if (n == 0)
-                            throw std::logic_error("the function basic_option::handle_params() or basic_getopt::handle_nonopt() must return a non-zero value.");
+                        assert(n != 0);
                         params.advance(n);
                         processed += n;
                     }
