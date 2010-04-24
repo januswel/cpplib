@@ -33,35 +33,22 @@ enum event_kind_t {
     SIZE,
     OUTPUT
 };
-// a template structure of event
-template<typename valueT>
-struct EventOpt {
-    typedef valueT  value_t;
-    event_kind_t type;
-    value_t val;
-};
-// partial specialization where valueT = void
-template<>
-struct EventOpt<void> {
-    typedef void  value_t;
-    event_kind_t type;
-};
 
 // instantiations of event types
-typedef EventOpt<void>                              EventVoid;
-typedef pattern::event::event_listener<EventVoid>   VoidListener;
-typedef pattern::event::event_source<EventVoid>     VoidSource;
+typedef pattern::event::basic_event<event_kind_t, void> EventVoid;
+typedef pattern::event::event_listener<EventVoid>       EventListenerVoid;
+typedef pattern::event::event_source<EventVoid>         EventSourceVoid;
 
-typedef EventOpt<unsigned int>                      EventUint;
-typedef pattern::event::event_listener<EventUint>   UintListener;
-typedef pattern::event::event_source<EventUint>     UintSource;
+typedef pattern::event::basic_event<event_kind_t, unsigned int> EventUint;
+typedef pattern::event::event_listener<EventUint>               EventListenerUint;
+typedef pattern::event::event_source<EventUint>                 EventSourceUint;
 
-typedef EventOpt<std::string>                       EventString;
-typedef pattern::event::event_listener<EventString> StringListener;
-typedef pattern::event::event_source<EventString>   StringSource;
+typedef pattern::event::basic_event<event_kind_t, std::string>  EventStr;
+typedef pattern::event::event_listener<EventStr>                EventListenerStr;
+typedef pattern::event::event_source<EventStr>                  EventSourceStr;
 
 // my getopt definition
-class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, StringListener {
+class MyGetOpt : public util::getopt::getopt, EventListenerVoid, EventListenerUint, EventListenerStr {
     private:
         // variables to contain option values
         bool mv_version;
@@ -82,7 +69,7 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
         // event handlers
         void handle_event(const EventVoid& event) {
             DBGLOG("handle_event(const EventVoid&)");
-            switch (event.type) {
+            switch (event.kind) {
                 case VERSION:   mv_version = true;
                                 break;
                 case HELP:      mv_help = true;
@@ -93,17 +80,17 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
 
         void handle_event(const EventUint& event) {
             DBGLOG("handle_event(const EventUint&)");
-            mv_size = event.val;
+            mv_size = event.data;
         }
 
-        void handle_event(const EventString& event) {
-            DBGLOG("handle_event(const EventString&)");
-            mv_output = event.val;
+        void handle_event(const EventStr& event) {
+            DBGLOG("handle_event(const EventStr&)");
+            mv_output = event.data;
         }
 
     private:
         // option definition
-        class OptVersion : public option_t, public VoidSource {
+        class OptVersion : public option_t, public EventSourceVoid {
             public:
                 OptVersion(void) { DBGLOG("OptVersion"); }
                 ~OptVersion(void) { DBGLOG("~OptVersion"); }
@@ -120,7 +107,7 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
                 }
         } opt_version;
 
-        class OptHelp : public option_t, public VoidSource {
+        class OptHelp : public option_t, public EventSourceVoid {
             public:
                 OptHelp(void) { DBGLOG("OptHelp"); }
                 ~OptHelp(void) { DBGLOG("~OptHelp"); }
@@ -137,7 +124,7 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
                 }
         } opt_help;
 
-        class OptSize : public option_t, public UintSource {
+        class OptSize : public option_t, public EventSourceUint {
             public:
                 OptSize(void) { DBGLOG("OptSize"); }
                 ~OptSize(void) { DBGLOG("~OptSize"); }
@@ -161,7 +148,7 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
                 }
         } opt_size;
 
-        class OptOutput : public option_t, public StringSource {
+        class OptOutput : public option_t, public EventSourceStr {
             public:
                 OptOutput(void) { DBGLOG("OptOutput"); }
                 ~OptOutput(void) { DBGLOG("~OptOutput"); }
@@ -174,7 +161,7 @@ class MyGetOpt : public util::getopt::getopt, VoidListener, UintListener, String
                     DBGLOG("OptOutput::handle_params");
                     parameters_t::const_iterator next = params.current() + 1;
                     if (next != params.end()) {
-                        EventString event = { OUTPUT, *next };
+                        EventStr event = { OUTPUT, *next };
                         dispatch_event(event);
                         return 2;
                     }
