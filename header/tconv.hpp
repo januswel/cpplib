@@ -16,31 +16,27 @@
 namespace util {
     namespace string {
         // definitions of character traits
-        template<typename Ch> struct char_traits {};
+        template<typename Char> struct char_traits {};
         template<> struct char_traits<char> {
-            typedef char                char_t;
-            typedef std::string         string_t;
-            typedef std::stringstream   stream_t;
-            static const char_t* null() { return ""; }
+            typedef char                char_type;
+            static const char_type* null() { return ""; }
         };
         template<> struct char_traits<wchar_t> {
-            typedef wchar_t             char_t;
-            typedef std::wstring        string_t;
-            typedef std::wstringstream  stream_t;
-            static const char_t* null() { return L""; }
+            typedef wchar_t             char_type;
+            static const char_type* null() { return L""; }
         };
 
         // type converter
-        template<typename Ch, typename Tr = char_traits<Ch> >
+        template<typename Char, typename Traits = char_traits<Char> >
             class basic_tconv {
                 private:
                     // for convenience
-                    typedef typename Tr::char_t     char_t;
-                    typedef typename Tr::string_t   string_t;
-                    typedef typename Tr::stream_t   stream_t;
+                    typedef Char                                char_type;
+                    typedef std::basic_string<char_type>        string_type;
+                    typedef std::basic_stringstream<char_type>  stream_type;
 
                     // member variables
-                    stream_t ss;
+                    stream_type ss;
 
                 public:
                     // constructor
@@ -51,8 +47,8 @@ namespace util {
                     // This can be omitted specifying T because tye type
                     // inference always works.
                     template<typename T>
-                        string_t strfrom(T num) {
-                            ss.clear(); ss.str(Tr::null());
+                        string_type strfrom(T num) {
+                            ss.clear(); ss.str(Traits::null());
 
                             ss << num;
                             return ss.str();
@@ -61,7 +57,7 @@ namespace util {
                     // std::basic_string -> specified type
                     // This must be specified T
                     template<typename T>
-                        T strto(const string_t& str) {
+                        T strto(const string_type& str) {
                             ss.clear();
 
                             ss.str(str);

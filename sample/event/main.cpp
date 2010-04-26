@@ -10,7 +10,7 @@
 #include <vector>
 #include "../../header/event.hpp"
 
-enum language_t {
+enum language_type {
     CHINESE,
     ENGLISH,
     GERMAN,
@@ -21,7 +21,7 @@ enum language_t {
     NUMOF_LANG
 };
 
-const char* language_name(const language_t lang) {
+const char* language_name(const language_type lang) {
     switch (lang) {
         case CHINESE:   return "Chinese";
         case ENGLISH:   return "English";
@@ -33,26 +33,26 @@ const char* language_name(const language_t lang) {
     }
 }
 
-class Language : public pattern::event::event_source<language_t> {
+class Language : public pattern::event::event_source<language_type> {
     public:
-        Language(language_t lang = ENGLISH) { dispatch_event(lang); }
-        void set(language_t lang) { dispatch_event(lang); }
+        Language(language_type lang = ENGLISH) { dispatch_event(lang); }
+        void set(language_type lang) { dispatch_event(lang); }
 };
 
-class Fruit : public pattern::event::event_listener<language_t> {
+class Fruit : public pattern::event::event_listener<language_type> {
     protected:
-        language_t lang;
+        language_type lang;
 
     public:
         Fruit() : lang(ENGLISH) {}
         virtual ~Fruit() {}
 
-        void language(const language_t lang) { this->lang = lang; }
+        void language(const language_type lang) { this->lang = lang; }
         const char* language(void) const { return language_name(lang); }
         virtual const char* name(void) const = 0;
 
         // implementation of virtual function
-        void handle_event(const language_t& l) { lang = l; }
+        void handle_event(const language_type& l) { lang = l; }
 };
 
 std::ostream& operator<< (std::ostream& out, const Fruit& f) {
@@ -126,9 +126,9 @@ int main(void) {
         .add_event_listener(banana);
 
     // register all languages
-    typedef std::vector<language_t> lang_list_t;
-    typedef lang_list_t::iterator   lang_it;
-    lang_list_t langs;
+    typedef std::vector<language_type>  lang_array_type;
+    typedef lang_array_type::iterator   lang_array_iterator;
+    lang_array_type langs;
     langs.push_back(CHINESE);
     langs.push_back(ENGLISH);
     langs.push_back(GERMAN);
@@ -137,7 +137,7 @@ int main(void) {
     langs.push_back(RUSSIAN);
 
     // print all languages
-    for (lang_it it = langs.begin(); it < langs.end(); ++it) {
+    for (lang_array_iterator it = langs.begin(); it < langs.end(); ++it) {
         lang.set(*it);
         std::cout
             << apple << "\n"

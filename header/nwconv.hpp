@@ -17,28 +17,28 @@
 
 namespace util {
     namespace string {
-        template<typename inT, typename exT, typename statT>
+        template<typename Internal, typename External, typename State>
             class basic_nwconv {
                 private:
                     // typedefs
-                    typedef std::codecvt<inT, exT, statT>   codecvt_t;
-                    typedef typename codecvt_t::state_type  state_t;
-                    typedef typename codecvt_t::intern_type intern_t;
-                    typedef typename codecvt_t::extern_type extern_t;
-                    typedef std::basic_string<intern_t>     instring_t;
-                    typedef std::basic_string<extern_t>     exstring_t;
+                    typedef std::codecvt<Internal, External, State> codecvt_type;
+                    typedef typename codecvt_type::state_type       state_type;
+                    typedef typename codecvt_type::intern_type      intern_type;
+                    typedef typename codecvt_type::extern_type      extern_type;
+                    typedef std::basic_string<intern_type>          intern_string_type;
+                    typedef std::basic_string<extern_type>          extern_string_type;
 
                     // cache a reference and objects
-                    const codecvt_t& codecvt(void) const {
-                        static const codecvt_t& conv = std::use_facet<codecvt_t>(loc);
+                    const codecvt_type& codecvt(void) const {
+                        static const codecvt_type& conv = std::use_facet<codecvt_type>(loc);
                         return conv;
                     }
-                    state_t& in_state(void) const {
-                        static state_t in_stat;
+                    state_type& in_state(void) const {
+                        static state_type in_stat;
                         return in_stat;
                     }
-                    state_t& out_state(void) const {
-                        static state_t out_stat;
+                    state_type& out_state(void) const {
+                        static state_type out_stat;
                         return out_stat;
                     }
 
@@ -48,29 +48,29 @@ namespace util {
                 public:
                     // constructor
                     explicit basic_nwconv(std::locale loc = std::locale("")) : loc(loc) {
-                        if (!std::has_facet<codecvt_t>(loc))
+                        if (!std::has_facet<codecvt_type>(loc))
                             throw std::logic_error("Specified locale doesn't have codecvt facet.");
                     }
 
                     // narrow to wide
-                    instring_t ntow(const exstring_t& src) const {
+                    intern_string_type ntow(const extern_string_type& src) const {
                         // preparations
                         // a size of src string
                         const std::size_t size = src.length();
                         // buffers
-                        std::vector<intern_t> dst_vctr(size);
-                        intern_t* const dst = &dst_vctr[0];
+                        std::vector<intern_type> dst_vctr(size);
+                        intern_type* const dst = &dst_vctr[0];
                         // a dummy variable and a pointer to the next position
-                        const extern_t* dummy;
-                        intern_t* next;
+                        const extern_type* dummy;
+                        intern_type* next;
                         // cache the first position of c style characters
-                        const extern_t* const s = src.c_str();
+                        const extern_type* const s = src.c_str();
 
                         // do it
                         if (codecvt().in(
                                     in_state(),
                                     s,   s   + size, dummy,
-                                    dst, dst + size, next) == codecvt_t::ok) {
+                                    dst, dst + size, next) == codecvt_type::ok) {
                             return std::wstring(dst, next - dst);
                         }
 
@@ -80,7 +80,7 @@ namespace util {
                     }
 
                     // wide to narrow
-                    exstring_t wton(const instring_t& src) const {
+                    extern_string_type wton(const intern_string_type& src) const {
                         // preparations
                         // a size of src string
                         const std::size_t src_size = src.length();
@@ -88,19 +88,19 @@ namespace util {
                         // This value is expected maximum.
                         const std::size_t dst_size = codecvt().max_length() * src_size;
                         // buffers
-                        std::vector<extern_t> dst_vctr(dst_size);
-                        extern_t* const dst = &dst_vctr[0];
+                        std::vector<extern_type> dst_vctr(dst_size);
+                        extern_type* const dst = &dst_vctr[0];
                         // a dummy variable and a pointer to the next position
-                        const intern_t* dummy;
-                        extern_t* next;
+                        const intern_type* dummy;
+                        extern_type* next;
                         // cache the first position of c style characters
-                        const intern_t* const s = src.c_str();
+                        const intern_type* const s = src.c_str();
 
                         // do it
                         if (codecvt().out(
                                     out_state(),
                                     s,   s   + src_size, dummy,
-                                    dst, dst + dst_size, next) == codecvt_t::ok) {
+                                    dst, dst + dst_size, next) == codecvt_type::ok) {
                             return std::string(dst, next - dst);
                         }
 

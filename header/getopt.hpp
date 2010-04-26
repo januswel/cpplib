@@ -34,29 +34,29 @@ namespace util {
          *  subject forward, but this is called by the class basic_getopt
          *  automatically, so don't call this manually.
          *  */
-        template<typename charT> class basic_parameters {
+        template<typename Char> class basic_parameters {
             public:
-                typedef charT                                   char_t;
-                typedef std::basic_string<char_t>               string_t;
-                typedef std::vector<string_t>                   string_array_t;
-                typedef typename string_array_t::const_iterator const_iterator;
+                typedef Char                                        char_type;
+                typedef std::basic_string<char_type>                string_type;
+                typedef std::vector<string_type>                    string_array_type;
+                typedef typename string_array_type::const_iterator  const_iterator;
 
             private:
-                const string_array_t* mv_array;
+                const string_array_type* mv_array;
                 const_iterator mv_current;
 
             public:
                 // constructor
-                basic_parameters(string_array_t& array)
+                basic_parameters(string_array_type& array)
                     : mv_array(&array), mv_current(array.begin()) {}
-                basic_parameters(string_array_t* array)
+                basic_parameters(string_array_type* array)
                     : mv_array(array), mv_current(array->begin()) {}
 
                 // getters
                 const const_iterator& current(void) const { return mv_current; }
                 const const_iterator begin(void) const { return mv_array->begin(); }
                 const const_iterator end(void) const { return mv_array->end(); }
-                const string_array_t& operator()(void) const { return *mv_array; }
+                const string_array_type& operator()(void) const { return *mv_array; }
 
                 // positioning
                 void advance(unsigned int n) { std::advance(mv_current, n); }
@@ -67,26 +67,26 @@ namespace util {
          *  For Microsoft environment, you can define the new trait that has
          *  the prefix "/".
          * */
-        template<typename charT> struct option_traits;
+        template<typename Char> struct option_traits;
         template<> struct option_traits<char> {
-            typedef char char_t;
+            typedef char char_type;
             struct shortname {
-                static const char_t* prefix(void) { return "-"; }
+                static const char_type* prefix(void) { return "-"; }
                 static const unsigned int prefix_length = 1;
             };
             struct longname {
-                static const char_t* prefix(void) { return "--"; }
+                static const char_type* prefix(void) { return "--"; }
                 static const unsigned int prefix_length = 2;
             };
         };
         template<> struct option_traits<wchar_t> {
-            typedef wchar_t char_t;
+            typedef wchar_t char_type;
             struct shortname {
-                static const char_t* prefix(void) { return L"-"; }
+                static const char_type* prefix(void) { return L"-"; }
                 static const unsigned int prefix_length = 1;
             };
             struct longname {
-                static const char_t* prefix(void) { return L"--"; }
+                static const char_type* prefix(void) { return L"--"; }
                 static const unsigned int prefix_length = 2;
             };
         };
@@ -103,7 +103,7 @@ namespace util {
          *              - return option names. shortname() should return one
          *                character as a matter of principle.
          *              - Overriding the only one of two functions is OK.
-         *          - handle_params(const parameters_t&)
+         *          - handle_params(const parameters_type&)
          *              - handles the current parameter (or more parameters).
          *              - This member function must return a number of
          *                processed parameters. e.g.: the option class that
@@ -112,25 +112,25 @@ namespace util {
          *                that handles "-s <size>" means "set size to <size>"
          *                will eat up "-v" and "<size>", and return 2.
          * */
-        template<typename charT, typename traitsT = option_traits<charT> >
+        template<typename Char, typename Traits = option_traits<Char> >
         class basic_option
-            : public pattern::cor::basic_handler<unsigned int, basic_parameters<charT> > {
+            : public pattern::cor::basic_handler<unsigned int, basic_parameters<Char> > {
             public:
-                typedef charT                       char_t;
-                typedef traitsT                     traits_t;
-                typedef std::basic_string<char_t>   string_t;
-                typedef unsigned int                return_t;
-                typedef basic_parameters<char_t>    parameters_t;
+                typedef Char                            char_type;
+                typedef Traits                          traits_type;
+                typedef std::basic_string<char_type>    string_type;
+                typedef unsigned int                    return_type;
+                typedef basic_parameters<char_type>     parameters_type;
 
             protected:
-                typedef typename traits_t::longname     longname_traits_t;
-                typedef typename traits_t::shortname    shortname_traits_t;
+                typedef typename traits_type::longname  longname_traits;
+                typedef typename traits_type::shortname shortname_traits;
 
             protected:
                 // member functions to be overridden
-                virtual const char_t* shortname(void) const { return NULL; }
-                virtual const char_t* longname(void) const { return NULL; }
-                virtual return_t handle_params(const parameters_t&) = 0;
+                virtual const char_type* shortname(void) const { return NULL; }
+                virtual const char_type* longname(void) const { return NULL; }
+                virtual return_type handle_params(const parameters_type&) = 0;
 
             public:
                 // typical destructor
@@ -139,50 +139,50 @@ namespace util {
             public:
                 // implementations for the virtual member functions of the
                 // super class
-                bool is_in_charge(const parameters_t& params) const {
-                    const string_t& current = *(params.current());
+                bool is_in_charge(const parameters_type& params) const {
+                    const string_type& current = *(params.current());
                     if (
                                (
-                                is_opt<longname_traits_t>(current)
-                             && is_known<longname_traits_t>(current, longname()))
+                                is_opt<longname_traits>(current)
+                             && is_known<longname_traits>(current, longname()))
                             || (
-                                is_opt<shortname_traits_t>(current)
-                             && is_known<shortname_traits_t>(current, shortname()))) {
+                                is_opt<shortname_traits>(current)
+                             && is_known<shortname_traits>(current, shortname()))) {
                         return true;
                     }
                     return false;
                 }
 
                 // just delegate
-                unsigned int handle_responsibility(const parameters_t& params) {
+                unsigned int handle_responsibility(const parameters_type& params) {
                     return handle_params(params);
                 }
 
             protected:
                 // utilities
-                template<typename trT>
-                static bool is_opt(const string_t& current) {
+                template<typename SubTraits>
+                static bool is_opt(const string_type& current) {
                     return current.compare(
                                 0,
-                                trT::prefix_length,
-                                trT::prefix()) == 0;
+                                SubTraits::prefix_length,
+                                SubTraits::prefix()) == 0;
                 }
 
-                template<typename trT>
-                static bool is_known(const string_t& current, const char_t* name) {
+                template<typename SubTraits>
+                static bool is_known(const string_type& current, const char_type* name) {
                     return (
                                name != NULL
                             && current.compare(
-                                trT::prefix_length,
+                                SubTraits::prefix_length,
                                 current.size() - 1,
                                 name) == 0);
                 }
 
             public:
-                static bool has_opt_prefix(const string_t& current) {
+                static bool has_opt_prefix(const string_type& current) {
                     return (
-                               is_opt<longname_traits_t>(current)
-                            || is_opt<shortname_traits_t>(current));
+                               is_opt<longname_traits>(current)
+                            || is_opt<shortname_traits>(current));
                 }
         };
 
@@ -193,7 +193,7 @@ namespace util {
          *      1. Define a class or struct that is derived from this class.
          *      2. Override the following member functions
          *
-         *          - handle_nonopt(const parameters_t&, bool)
+         *          - handle_nonopt(const parameters_type&, bool)
          *              - handles non-option parameters.
          *              - The second parameter whose type is bool represents
          *                whether the "current" parameter is unknown option or
@@ -207,25 +207,25 @@ namespace util {
          *         basic_option on the subclass's object of this class by using
          *         the member function register_option().
          *      5. Call the member function analyze() with an object of
-         *         std::vector<string_t> that has parameters.
+         *         std::vector<string_type> that has parameters.
          * */
-        template<typename charT>
+        template<typename Char>
         class basic_getopt
-            : public pattern::cor::basic_chain<unsigned int, basic_parameters<charT> > {
+            : public pattern::cor::basic_chain<unsigned int, basic_parameters<Char> > {
             public:
-                typedef charT                       char_t;
-                typedef std::basic_string<char_t>   string_t;
-                typedef unsigned int                return_t;
-                typedef basic_parameters<char_t>    parameters_t;
-                typedef basic_option<char_t>        option_t;
-                typedef std::vector<string_t>       string_array_t;
+                typedef Char                            char_type;
+                typedef std::basic_string<char_type>    string_type;
+                typedef unsigned int                    return_type;
+                typedef basic_parameters<char_type>     parameters_type;
+                typedef basic_option<char_type>         option_type;
+                typedef std::vector<string_type>        string_array_type;
 
             protected:
                 typedef basic_getopt    this_t;
 
             protected:
                 // member functions to be overridden
-                virtual unsigned int handle_nonopt(const parameters_t&) = 0;
+                virtual unsigned int handle_nonopt(const parameters_type&) = 0;
 
             public:
                 // typical destructor
@@ -234,25 +234,25 @@ namespace util {
             protected:
                 // implementations for the virtual member functions of the
                 // super class
-                unsigned int at_end_of_chain(const parameters_t& params) {
+                unsigned int at_end_of_chain(const parameters_type& params) {
                     return handle_nonopt(params);
                 }
 
             public:
                 // utilities
-                this_t& register_option(option_t& option) {
+                this_t& register_option(option_type& option) {
                     enlink_chain(option);
                     return *this;
                 }
 
-                this_t& register_option(option_t* option) {
+                this_t& register_option(option_type* option) {
                     enlink_chain(option);
                     return *this;
                 }
 
                 // main function
-                unsigned int analyze(string_array_t& data) {
-                    parameters_t params(data);
+                unsigned int analyze(string_array_type& data) {
+                    parameters_type params(data);
                     unsigned int processed = 0;
                     while (params.current() != params.end()) {
                         unsigned int n = request_to_chain(params);
@@ -263,8 +263,8 @@ namespace util {
                     return processed;
                 }
 
-                unsigned int analyze(const int argc, const char_t* const argv[]) {
-                    string_array_t data;
+                unsigned int analyze(const int argc, const char_type* const argv[]) {
+                    string_array_type data;
                     data.reserve(argc);
                     for (int i = 1; i < argc; ++i) data.push_back(argv[i]);
                     return analyze(data);

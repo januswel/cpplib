@@ -36,17 +36,18 @@ namespace util {
     namespace log {
         // In order to be used without building object,
         // this class has only typedefs and static functions.
-        template<typename charT>
+        template<typename Char>
             struct basic_dflogger {
                 // typedefs
-                typedef charT   char_t;
-                typedef std::basic_ofstream<char_t>  ofstream_t;
+                typedef Char                            char_type;
+                typedef std::basic_ofstream<char_type>  ofstream_type;
 
                 // static functions
                 // fixed filename
                 static const char* filename(void) { return "debug.log"; }
-                static ofstream_t& logger(void) {
-                    static ofstream_t logger(filename(), std::ios::out | std::ios::trunc);
+                static ofstream_type& logger(void) {
+                    static ofstream_type logger(filename(),
+                            std::ios::out | std::ios::trunc);
                     return logger;
                 }
             };

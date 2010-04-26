@@ -23,21 +23,21 @@ namespace pattern {
          *      1. Define a class or struct that is derived from this class.
          *      2. Override the following member functions
          *
-         *          - is_in_charge(const data_t&)
+         *          - is_in_charge(const data_type&)
          *              - must return true if the sub class has the
          *                responsibility to handle the passed data.
          *              - otherwise false.
-         *          - handle_responsibility(const data_t&)
+         *          - handle_responsibility(const data_type&)
          *              - process the data.
          *
          *      3. Create objects of the sub classes and enlink(1) by
          *         basic_chain.
          *  */
-        template<typename retT, typename dataT> class basic_handler {
+        template<typename Return, typename Data> class basic_handler {
             public:
                 // typedefs
-                typedef retT    return_t;
-                typedef dataT   data_t;
+                typedef Return  return_type;
+                typedef Data    data_type;
 
             public:
                 // destructor
@@ -45,10 +45,11 @@ namespace pattern {
 
                 // This must return true if the data can be handled by the
                 // class.  Otherwise false.
-                virtual bool is_in_charge(const data_t&) const = 0;
+                virtual bool is_in_charge(const data_type&) const = 0;
 
                 // the procedure to handle the data.
-                virtual return_t handle_responsibility(const data_t&) = 0;
+                virtual return_type
+                    handle_responsibility(const data_type&) = 0;
         };
 
         /*
@@ -69,21 +70,20 @@ namespace pattern {
          *
          *      2. Create objects of the sub or instantiated class and
          *         enlink(1) objects of the sub classes of basic_handler, then
-         *         execute request(const data_t&).
+         *         execute request(const data_type&).
          *  */
-        template<typename retT, typename dataT> class basic_chain {
+        template<typename Return, typename Data> class basic_chain {
             public:
-                typedef retT                                return_t;
-                typedef dataT                               data_t;
-                typedef basic_handler<return_t, data_t>     handler_t;
+                typedef Return                                  return_type;
+                typedef Data                                    data_type;
+                typedef basic_handler<return_type, data_type>   handler_type;
 
             protected:
-                typedef handler_t*                          handler_ptr_t;
-                typedef std::list<handler_ptr_t>            handler_array_t;
-                typedef typename handler_array_t::iterator  handler_array_iterator;
+                typedef std::list<handler_type*>                handler_array_type;
+                typedef typename handler_array_type::iterator   handler_array_iterator;
 
             private:
-                typedef basic_chain<return_t, data_t>       this_t;
+                typedef basic_chain<return_type, data_type>     this_type;
 
             public:
                 // destructor
@@ -91,55 +91,53 @@ namespace pattern {
 
             protected:
                 // member variables
-                handler_array_t chain;
+                handler_array_type chain;
 
             protected:
                 // the function to be run at the end of the chain
                 // Override this if you need other processings.
-                virtual return_t at_end_of_chain(const data_t&) {
+                virtual return_type at_end_of_chain(const data_type&) {
                     throw std::logic_error("The requested data has reached the end of the chain.");
                 }
 
             public:
                 // enlink objects
-                this_t& enlink_chain(handler_t& h) {
+                this_type& enlink_chain(handler_type& h) {
                     chain.push_back(&h);
                     return *this;
                 }
 
-                this_t& enlink_chain(handler_t* h) {
+                this_type& enlink_chain(handler_type* h) {
                     chain.push_back(h);
                     return *this;
                 }
 
                 // the function to follow the chain
-                return_t request_to_chain(const data_t& data) {
+                return_type request_to_chain(const data_type& data) {
                     for (handler_array_iterator it = chain.begin();
                             it != chain.end();
                             ++it) {
-                        const handler_ptr_t& item = *it;
-                        if (item->is_in_charge(data)) {
-                            return item->handle_responsibility(data);
+                        if ((*it)->is_in_charge(data)) {
+                            return (*it)->handle_responsibility(data);
                         }
                     }
                     return at_end_of_chain(data);
                 }
         };
 
-        // the partial specialization where retT = void
-        template<typename dataT> class basic_chain<void, dataT> {
+        // the partial specialization where Return = void
+        template<typename Data> class basic_chain<void, Data> {
             public:
-                typedef void                                return_t;
-                typedef dataT                               data_t;
-                typedef basic_handler<void, data_t>         handler_t;
+                typedef void                            return_type;
+                typedef Data                            data_type;
+                typedef basic_handler<void, data_type>  handler_type;
 
             protected:
-                typedef handler_t*                          handler_ptr_t;
-                typedef std::list<handler_ptr_t>            handler_array_t;
-                typedef typename handler_array_t::iterator  handler_array_iterator;
+                typedef std::list<handler_type*>                handler_array_type;
+                typedef typename handler_array_type::iterator   handler_array_iterator;
 
             private:
-                typedef basic_chain<void, data_t>           this_t;
+                typedef basic_chain<void, data_type>           this_type;
 
             public:
                 // destructor
@@ -147,35 +145,34 @@ namespace pattern {
 
             protected:
                 // member variables
-                handler_array_t chain;
+                handler_array_type chain;
 
             protected:
                 // the function to be run at the end of the chain
                 // Override this if you need other processings.
-                virtual void at_end_of_chain(const data_t&) {
+                virtual void at_end_of_chain(const data_type&) {
                     throw std::logic_error("The requested data has reached the end of the chain.");
                 }
 
             public:
                 // enlink objects
-                this_t& enlink_chain(handler_t& h) {
+                this_type& enlink_chain(handler_type& h) {
                     chain.push_back(&h);
                     return *this;
                 }
 
-                this_t& enlink_chain(handler_t* h) {
+                this_type& enlink_chain(handler_type* h) {
                     chain.push_back(h);
                     return *this;
                 }
 
                 // the function to follow the chain
-                void request_to_chain(const data_t& data) {
+                void request_to_chain(const data_type& data) {
                     for (handler_array_iterator it = chain.begin();
                             it != chain.end();
                             ++it) {
-                        const handler_ptr_t& item = *it;
-                        if (item->is_in_charge(data)) {
-                            item->handle_responsibility(data);
+                        if ((*it)->is_in_charge(data)) {
+                            (*it)->handle_responsibility(data);
                         }
                     }
                     at_end_of_chain(data);

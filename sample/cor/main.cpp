@@ -35,7 +35,7 @@ class PrimeNumber : public pattern::cor::basic_handler<bool, unsigned int> {
             return (n % value) == 0;
         }
         bool is_need_data(void) const { return false; }
-        bool handle_responsibility(const data_t&) {
+        bool handle_responsibility(const data_type&) {
             DBGLOG("handle(" << value << ")");
             return false;
         }
@@ -67,7 +67,7 @@ class PrimeNumbers : public pattern::cor::basic_chain<bool, unsigned int> {
 
     protected:
         // implementations of virtual functions
-        bool at_end_of_chain(const data_t&) { return true; }
+        bool at_end_of_chain(const data_type&) { return true; }
 };
 
 int main(const int argc, const char* const argv[]) {

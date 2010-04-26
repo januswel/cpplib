@@ -10,7 +10,7 @@
 #include <vector>
 #include "../../header/observer.hpp"
 
-enum language_t {
+enum language_type {
     CHINESE,
     ENGLISH,
     GERMAN,
@@ -21,7 +21,7 @@ enum language_t {
     NUMOF_LANG
 };
 
-const char* language_name(const language_t lang) {
+const char* language_name(const language_type lang) {
     switch (lang) {
         case CHINESE:   return "Chinese";
         case ENGLISH:   return "English";
@@ -33,18 +33,18 @@ const char* language_name(const language_t lang) {
     }
 }
 
-class Language : public pattern::observer::basic_subject<language_t> {
+class Language : public pattern::observer::basic_subject<language_type> {
     private:
-        language_t lang;
+        language_type lang;
 
     protected:
         // implementation of virtual function
         // tell what object represents a state to basic_subject
-        const state_t& subject_state(void) const { return lang; }
+        const state_type& subject_state(void) const { return lang; }
 
     public:
-        Language(language_t lang = ENGLISH) : lang(lang) { notify_state(); }
-        void set(language_t lang) { this->lang = lang; notify_state(); }
+        Language(language_type lang = ENGLISH) : lang(lang) { notify_state(); }
+        void set(language_type lang) { this->lang = lang; notify_state(); }
         const char* what(void) const { return language_name(lang); }
 };
 
@@ -52,20 +52,20 @@ std::ostream& operator<< (std::ostream& out, const Language& l) {
     return out << l.what();
 }
 
-class Fruit : public pattern::observer::basic_observer<language_t> {
+class Fruit : public pattern::observer::basic_observer<language_type> {
     protected:
-        language_t lang;
+        language_type lang;
 
     public:
         Fruit() : lang(ENGLISH) {}
         virtual ~Fruit() {}
 
-        void language(const language_t lang) { this->lang = lang; }
+        void language(const language_type lang) { this->lang = lang; }
         const char* language(void) const { return language_name(lang); }
         virtual const char* name(void) const = 0;
 
         // implementation of virtual function
-        void update_state(const state_t& s) { lang = s; }
+        void update_state(const state_type& s) { lang = s; }
 };
 
 std::ostream& operator<< (std::ostream& out, const Fruit& f) {
@@ -139,9 +139,9 @@ int main(void) {
         .attach_observer(banana);
 
     // register all languages
-    typedef std::vector<language_t> lang_list_t;
-    typedef lang_list_t::iterator   lang_it;
-    lang_list_t langs;
+    typedef std::vector<language_type>  lang_array_type;
+    typedef lang_array_type::iterator   lang_array_iterator;
+    lang_array_type langs;
     langs.push_back(CHINESE);
     langs.push_back(ENGLISH);
     langs.push_back(GERMAN);
@@ -150,7 +150,7 @@ int main(void) {
     langs.push_back(RUSSIAN);
 
     // print all languages
-    for (lang_it it = langs.begin(); it < langs.end(); ++it) {
+    for (lang_array_iterator it = langs.begin(); it < langs.end(); ++it) {
         lang.set(*it);
         std::cout
             << apple << "\n"

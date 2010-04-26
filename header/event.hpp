@@ -14,8 +14,8 @@
 namespace pattern {
     namespace event {
         // forward declarations
-        template<typename T> class event_source;
-        template<typename T> class event_listener;
+        template<typename Event> class event_source;
+        template<typename Event> class event_listener;
 
         /*
          *  a base class to send events
@@ -27,13 +27,13 @@ namespace pattern {
          *
          *  where event object is user-defined.
          * */
-        template<typename T> class event_source {
+        template<typename Event> class event_source {
             public:
-                typedef T                           event_t;
-                typedef event_listener<event_t>     listener_t;
+                typedef Event                       event_type;
+                typedef event_listener<event_type>  listener_type;
 
             private:
-                typedef event_source<event_t>       this_t;
+                typedef event_source<event_type>    this_type;
 
             protected:
                 /*
@@ -50,12 +50,12 @@ namespace pattern {
                  *        that randome access is slow.
                  *      - Adding and removing items are fast.
                  *  */
-                typedef std::list<listener_t*>              listener_array_t;
-                typedef typename listener_array_t::iterator listener_array_iterator;
+                typedef std::list<listener_type*>               listener_array_type;
+                typedef typename listener_array_type::iterator  listener_array_iterator;
 
             protected:
                 // an array of listners;
-                listener_array_t listeners;
+                listener_array_type listeners;
 
             protected:
                 // default constructor to forbid building objects of this type
@@ -66,30 +66,30 @@ namespace pattern {
                 virtual ~event_source(void) {}
 
                 // register an event listner
-                this_t& add_event_listener(listener_t& l) {
-                    listeners.push_back(&l);
+                this_type& add_event_listener(listener_type& listener) {
+                    listeners.push_back(&listener);
                     return *this;
                 }
 
-                this_t& add_event_listener(listener_t* l) {
-                    listeners.push_back(l);
+                this_type& add_event_listener(listener_type* listener) {
+                    listeners.push_back(listener);
                     return *this;
                 }
 
                 // release an event listner
-                this_t& remove_event_listener(listener_t& l) {
-                    listeners.remove(&l);
+                this_type& remove_event_listener(listener_type& listener) {
+                    listeners.remove(&listener);
                     return *this;
                 }
 
-                this_t& remove_event_listener(listener_t* l) {
-                    listeners.remove(l);
+                this_type& remove_event_listener(listener_type* listener) {
+                    listeners.remove(listener);
                     return *this;
                 }
 
             protected:
                 // send the event to event listners
-                void dispatch_event(const event_t& e) {
+                void dispatch_event(const event_type& e) {
                     for (listener_array_iterator it = listeners.begin();
                             it != listeners.end();
                             ++it) {
@@ -105,12 +105,12 @@ namespace pattern {
          *      1. Define the class or struct that is derived from this class.
          *      2. Implement the member function handle_event(1).
          * */
-        template<typename T> class event_listener {
+        template<typename Event> class event_listener {
             public:
-                typedef T                       event_t;
+                typedef Event                       event_type;
 
             private:
-                typedef event_listener<event_t> this_t;
+                typedef event_listener<event_type>  this_type;
 
             public:
                 // typical destructor
@@ -118,32 +118,32 @@ namespace pattern {
 
                 // Objects of this class are identified by the memory address
                 // of its instance.
-                bool operator==(const this_t& rhs) const {
+                bool operator==(const this_type& rhs) const {
                     return this == &rhs;
                 }
-                bool operator!=(const this_t& rhs) const {
+                bool operator!=(const this_type& rhs) const {
                     return !(*this == rhs);
                 }
 
             public:
                 // a virtual function which should be implemented by derived
                 // classes
-                virtual void handle_event(const event_t&) = 0;
+                virtual void handle_event(const event_type&) = 0;
         };
 
         // event template
-        template<typename kindT, typename dataT> struct basic_event {
-            typedef kindT kind_t;
-            typedef dataT data_t;
-            kind_t kind;
-            data_t data;
+        template<typename Kind, typename Data> struct basic_event {
+            typedef Kind    kind_type;
+            typedef Data    data_type;
+            kind_type kind;
+            data_type data;
         };
 
-        // partial specialization where dataT = void
-        template<typename kindT> struct basic_event<kindT, void> {
-            typedef kindT   kind_t;
-            typedef void    data_t;
-            kind_t kind;
+        // partial specialization where Data = void
+        template<typename Kind> struct basic_event<Kind, void> {
+            typedef Kind    kind_type;
+            typedef void    data_type;
+            kind_type kind;
         };
     }
 }

@@ -27,7 +27,7 @@
 
 // event definition
 // event kinds
-enum event_kind_t {
+enum event_kind_type {
     VERSION,
     HELP,
     SIZE,
@@ -36,17 +36,17 @@ enum event_kind_t {
 };
 
 // instantiations of event types
-typedef pattern::event::basic_event<event_kind_t, void> EventVoid;
-typedef pattern::event::event_listener<EventVoid>       EventListenerVoid;
-typedef pattern::event::event_source<EventVoid>         EventSourceVoid;
+typedef pattern::event::basic_event<event_kind_type, void>  EventVoid;
+typedef pattern::event::event_listener<EventVoid>           EventListenerVoid;
+typedef pattern::event::event_source<EventVoid>             EventSourceVoid;
 
-typedef pattern::event::basic_event<event_kind_t, unsigned int> EventUint;
-typedef pattern::event::event_listener<EventUint>               EventListenerUint;
-typedef pattern::event::event_source<EventUint>                 EventSourceUint;
+typedef pattern::event::basic_event<event_kind_type, unsigned int>  EventUint;
+typedef pattern::event::event_listener<EventUint>                   EventListenerUint;
+typedef pattern::event::event_source<EventUint>                     EventSourceUint;
 
-typedef pattern::event::basic_event<event_kind_t, std::string>  EventStr;
-typedef pattern::event::event_listener<EventStr>                EventListenerStr;
-typedef pattern::event::event_source<EventStr>                  EventSourceStr;
+typedef pattern::event::basic_event<event_kind_type, std::string>   EventStr;
+typedef pattern::event::event_listener<EventStr>                    EventListenerStr;
+typedef pattern::event::event_source<EventStr>                      EventSourceStr;
 
 // a class to contain states of options
 class OptState : public EventListenerVoid, public EventListenerUint, public EventListenerStr {
@@ -104,16 +104,16 @@ class OptState : public EventListenerVoid, public EventListenerUint, public Even
 class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
     private:
         // option definition
-        class OptVersion : public option_t, public EventSourceVoid {
+        class OptVersion : public option_type, public EventSourceVoid {
             public:
                 OptVersion(void) { DBGLOG("OptVersion"); }
                 ~OptVersion(void) { DBGLOG("~OptVersion"); }
 
             protected:
-                const char_t* shortname(void) const { return "v"; }
-                const char_t* longname(void) const { return "version"; }
+                const char_type* shortname(void) const { return "v"; }
+                const char_type* longname(void) const { return "version"; }
 
-                unsigned int handle_params(const parameters_t&) {
+                unsigned int handle_params(const parameters_type&) {
                     DBGLOG("OptVersion::handle_params");
                     EventVoid event = { VERSION };
                     dispatch_event(event);
@@ -121,16 +121,16 @@ class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
                 }
         } opt_version;
 
-        class OptHelp : public option_t, public EventSourceVoid {
+        class OptHelp : public option_type, public EventSourceVoid {
             public:
                 OptHelp(void) { DBGLOG("OptHelp"); }
                 ~OptHelp(void) { DBGLOG("~OptHelp"); }
 
             protected:
-                const char_t* shortname(void) const { return "h"; }
-                const char_t* longname(void) const { return "help"; }
+                const char_type* shortname(void) const { return "h"; }
+                const char_type* longname(void) const { return "help"; }
 
-                unsigned int handle_params(const parameters_t&) {
+                unsigned int handle_params(const parameters_type&) {
                     DBGLOG("OptHelp::handle_params");
                     EventVoid event = { HELP };
                     dispatch_event(event);
@@ -138,18 +138,18 @@ class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
                 }
         } opt_help;
 
-        class OptSize : public option_t, public EventSourceUint {
+        class OptSize : public option_type, public EventSourceUint {
             public:
                 OptSize(void) { DBGLOG("OptSize"); }
                 ~OptSize(void) { DBGLOG("~OptSize"); }
 
             protected:
-                const char_t* shortname(void) const { return "s"; }
-                const char_t* longname(void) const { return "size"; }
+                const char_type* shortname(void) const { return "s"; }
+                const char_type* longname(void) const { return "size"; }
 
-                unsigned int handle_params(const parameters_t& params) {
+                unsigned int handle_params(const parameters_type& params) {
                     DBGLOG("OptSize::handle_params");
-                    parameters_t::const_iterator next = params.current() + 1;
+                    parameters_type::const_iterator next = params.current() + 1;
                     if (next != params.end()) {
                         util::string::tconv tconv;
                         EventUint event = { SIZE, tconv.strto<unsigned int>(*next) };
@@ -162,18 +162,18 @@ class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
                 }
         } opt_size;
 
-        class OptOutput : public option_t, public EventSourceStr {
+        class OptOutput : public option_type, public EventSourceStr {
             public:
                 OptOutput(void) { DBGLOG("OptOutput"); }
                 ~OptOutput(void) { DBGLOG("~OptOutput"); }
 
             protected:
-                const char_t* shortname(void) const { return "o"; }
-                const char_t* longname(void) const { return "output"; }
+                const char_type* shortname(void) const { return "o"; }
+                const char_type* longname(void) const { return "output"; }
 
-                unsigned int handle_params(const parameters_t& params) {
+                unsigned int handle_params(const parameters_type& params) {
                     DBGLOG("OptOutput::handle_params");
-                    parameters_t::const_iterator next = params.current() + 1;
+                    parameters_type::const_iterator next = params.current() + 1;
                     if (next != params.end()) {
                         EventStr event = { OUTPUT, *next };
                         dispatch_event(event);
@@ -185,12 +185,12 @@ class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
 
     protected:
         // non-option handler
-        unsigned int handle_nonopt(const parameters_t& params) {
+        unsigned int handle_nonopt(const parameters_type& params) {
             DBGLOG("handle_nonopt");
 
-            const string_t& current = *(params.current());
+            const string_type& current = *(params.current());
 
-            if (option_t::has_opt_prefix(current)) {
+            if (option_type::has_opt_prefix(current)) {
                 throw std::runtime_error("unknown option: " + current);
             }
 
