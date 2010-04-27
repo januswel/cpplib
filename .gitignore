@@ -3,9 +3,13 @@
 
 # for Windows
 *.exe
+*.ilk
+*.manifest
+*.pdb
 
 # for gcc
 a.out
+*.o
 
 # for Vim
 .*.swp
