@@ -57,6 +57,10 @@ namespace util {
                         // preparations
                         // a size of src string
                         const std::size_t size = src.length();
+
+                        // no more task
+                        if (size == 0) return intern_string_type();
+
                         // buffers
                         std::vector<intern_type> dst_vctr(size);
                         intern_type* const dst = &dst_vctr[0];
@@ -84,6 +88,10 @@ namespace util {
                         // preparations
                         // a size of src string
                         const std::size_t src_size = src.length();
+
+                        // no more task
+                        if (src_size == 0) return extern_string_type();
+
                         // calc a size of dst string
                         // This value is expected maximum.
                         const std::size_t dst_size = codecvt().max_length() * src_size;
