@@ -114,11 +114,10 @@ namespace pattern {
 
                 // the function to follow the chain
                 return_type request_to_chain(const data_type& data) {
-                    for (handler_array_iterator it = chain.begin();
-                            it != chain.end();
-                            ++it) {
-                        if ((*it)->is_in_charge(data)) {
-                            return (*it)->handle_responsibility(data);
+                    for (handler_array_iterator itr = chain.begin();
+                            itr != chain.end(); ++itr) {
+                        if ((*itr)->is_in_charge(data)) {
+                            return (*itr)->handle_responsibility(data);
                         }
                     }
                     return at_end_of_chain(data);
@@ -168,11 +167,11 @@ namespace pattern {
 
                 // the function to follow the chain
                 void request_to_chain(const data_type& data) {
-                    for (handler_array_iterator it = chain.begin();
-                            it != chain.end();
-                            ++it) {
-                        if ((*it)->is_in_charge(data)) {
-                            (*it)->handle_responsibility(data);
+                    for (handler_array_iterator itr = chain.begin();
+                            itr != chain.end();
+                            ++itr) {
+                        if ((*itr)->is_in_charge(data)) {
+                            (*itr)->handle_responsibility(data);
                         }
                     }
                     at_end_of_chain(data);

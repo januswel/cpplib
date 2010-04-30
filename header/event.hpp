@@ -90,10 +90,10 @@ namespace pattern {
             protected:
                 // send the event to event listners
                 void dispatch_event(const event_type& e) {
-                    for (listener_array_iterator it = listeners.begin();
-                            it != listeners.end();
-                            ++it) {
-                        (*it)->handle_event(e);
+                    for (listener_array_iterator itr = listeners.begin();
+                            itr != listeners.end();
+                            ++itr) {
+                        (*itr)->handle_event(e);
                     }
                 }
         };

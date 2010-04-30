@@ -90,10 +90,10 @@ namespace pattern {
                 // Should we use std::for_each(3) ?
                 void notify_state(void) {
                     state_type s = subject_state();
-                    for (observer_array_iterator it = observers.begin();
-                            it != observers.end();
-                            ++it) {
-                        (*it)->update_state(s);
+                    for (observer_array_iterator itr = observers.begin();
+                            itr != observers.end();
+                            ++itr) {
+                        (*itr)->update_state(s);
                     }
                 }
 
