@@ -96,9 +96,7 @@ namespace pattern {
             protected:
                 // the function to be run at the end of the chain
                 // Override this if you need other processings.
-                virtual return_type at_end_of_chain(const data_type&) {
-                    throw std::logic_error("The requested data has reached the end of the chain.");
-                }
+                virtual return_type at_end_of_chain(const data_type&) = 0;
 
             public:
                 // enlink objects
@@ -149,9 +147,7 @@ namespace pattern {
             protected:
                 // the function to be run at the end of the chain
                 // Override this if you need other processings.
-                virtual void at_end_of_chain(const data_type&) {
-                    throw std::logic_error("The requested data has reached the end of the chain.");
-                }
+                virtual void at_end_of_chain(const data_type&) = 0;
 
             public:
                 // enlink objects
