@@ -17,8 +17,6 @@
 #include <string>
 #include <vector>
 
-inline std::string pack(const char* const str) { return std::string(str); }
-
 // We can't use std::mem_fun_ref() to compose functions for a non-static member
 // function in g++ 4.3.3, so it is needed to wrap it.
 #ifndef _MSC_VER
@@ -60,7 +58,7 @@ int main(const int argc, const char* const argv[]) {
     std::cout << std::endl;
 
     string_array_type params(argc);
-    std::transform(argv, argv + argc, params.begin(), pack);
+    std::copy(argv, argv + argc, params.begin());
 
     std::cout << "packed argv as std::string\n";
     std::ostream_iterator<std::string> soitr =
