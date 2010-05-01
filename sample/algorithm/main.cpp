@@ -17,12 +17,6 @@
 #include <string>
 #include <vector>
 
-// We can't use std::mem_fun_ref() to compose functions for a non-static member
-// function in g++ 4.3.3, so it is needed to wrap it.
-#ifndef _MSC_VER
-inline size_t length(const std::string& str) { return str.size(); }
-#endif
-
 template<typename Char>
 inline bool is(const std::ctype_base::mask mask, const Char c) {
     static const std::ctype<Char>& ctype =
@@ -70,16 +64,9 @@ int main(const int argc, const char* const argv[]) {
     std::cout << std::endl;
 
     std::cout << "lengths of packed argv as std::string\n";
-#ifdef _MSC_VER
-    // In g++ 4.3.3, this expression can't be passed.
-    util::algorithm::print_op<size_t>(
+    util::algorithm::print_op<std::string::size_type>(
             params.begin(), params.end(),
-            std::cout, "\n", std::mem_fun_ref(&(std::string::size)));
-#else
-    util::algorithm::print_op<size_t>(
-            params.begin(), params.end(),
-            std::cout, "\n", length);
-#endif
+            std::cout, "\n", std::mem_fun_ref(&std::string::size));
     std::cout << std::endl;
 
     std::cout << "argv that has any digits\n";
