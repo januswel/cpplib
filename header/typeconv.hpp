@@ -20,10 +20,12 @@ namespace util {
         template<> struct char_traits<char> {
             typedef char                char_type;
             static const char_type* null() { return ""; }
+            static const char_type* space() { return " "; }
         };
         template<> struct char_traits<wchar_t> {
             typedef wchar_t             char_type;
             static const char_type* null() { return L""; }
+            static const char_type* space() { return L" "; }
         };
 
         // type converter
@@ -63,6 +65,21 @@ namespace util {
                             T dst;
                             *this >> dst;
                             return dst;
+                        }
+
+                    template<typename InputIterator>
+                        string_type join(
+                                InputIterator first, InputIterator last,
+                                const string_type& delimeter = Traits::space()) {
+                            if (first == last)
+                                return string_type(Traits::null());
+
+                            this->clear();
+                            this->str(Traits::null());
+
+                            *this << *first++;
+                            while (first != last) *this << delimeter << *first++;
+                            return this->str();
                         }
             };
 

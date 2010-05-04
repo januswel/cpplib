@@ -67,12 +67,22 @@ int main(const int argc, const char* argv[]) {
             << endl;
     }
 
+    // manipulator
     unsigned int n = 255;
     double d = 0.12345678;
     conv << std::fixed << std::setprecision(3) << std::hex;
     cout
         << n << " -> " << conv.strfrom(n) << "\n"
         << d << " -> " << conv.strfrom(d) << "\n"
+        << endl;
+
+    // join
+    const int i[] = {-3, -2, 0, 3, 7, 12, 18};
+    conv << std::dec;
+    cout
+        << conv.join(argv, argv + argc, ", ") << "\n"
+        << conv.join(i, i + 7) << "\n"
+        << conv.join(i, i + 7, " -> ") << "\n"
         << endl;
 
     return 0;
