@@ -17,7 +17,7 @@
 #include "../../header/dlogger.hpp"
 #include "../../header/event.hpp"
 #include "../../header/getopt.hpp"
-#include "../../header/tconv.hpp"
+#include "../../header/typeconv.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -151,8 +151,8 @@ class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
                     DBGLOG("OptSize::handle_params");
                     parameters_type::const_iterator next = params.current() + 1;
                     if (next != params.end()) {
-                        util::string::tconv tconv;
-                        EventUint event = { SIZE, tconv.strto<unsigned int>(*next) };
+                        util::string::typeconverter conv;
+                        EventUint event = { SIZE, conv.strto<unsigned int>(*next) };
                         dispatch_event(event);
                         return 2;
                     }

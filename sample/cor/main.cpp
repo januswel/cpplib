@@ -8,7 +8,7 @@
 
 #include "../../header/cor.hpp"
 #include "../../header/dlogger.hpp"
-#include "../../header/tconv.hpp"
+#include "../../header/typeconv.hpp"
 #include <iostream>
 
 // TODO: use reference counting pointer for pointers to objects of PrimeNumber
@@ -72,10 +72,10 @@ class PrimeNumbers : public pattern::cor::basic_chain<bool, unsigned int> {
 
 int main(const int argc, const char* const argv[]) {
     // a max of calculation range
-    util::string::tconv tconv;
+    util::string::typeconverter conv;
     unsigned int max = (argc < 2)
         ? 100
-        : tconv.strto<unsigned int>(argv[1]);
+        : conv.strto<unsigned int>(argv[1]);
 
     // pick up prime numbers
     PrimeNumbers pn;

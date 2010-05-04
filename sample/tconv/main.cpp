@@ -1,12 +1,12 @@
 /*
  * main.cpp
- *  Sample codes for tconv.hpp
+ *  Sample codes for typeconv.hpp
  *
  *  written by janus_wel<janus.wel.3@gmail.com>
  *  This source code is in public domain, and has NO WARRANTY.
  * */
 
-#include "../../header/tconv.hpp"
+#include "../../header/typeconv.hpp"
 #include <iostream>
 #include <iomanip>
 #include <locale>
@@ -23,7 +23,7 @@ struct Complex {
 };
 
 // overloads of operator<< and operator>>
-// Now, tconv can affect user-defined type Complex
+// Now, typeconv can affect user-defined type Complex
 template<typename T>
 basic_ostream<T>& operator<<(basic_ostream<T>& out, const Complex& comp) {
     return out << comp.r << '+' << comp.i << 'i';
@@ -38,7 +38,7 @@ int main(const int argc, const char* argv[]) {
     Complex src(1, 3);
 
     // converter (classic locale)
-    tconv conv;
+    typeconverter conv;
     string converted = conv.strfrom(src);
     cout << left
         << setw(16) << "source"         << src << "\n"
@@ -47,7 +47,7 @@ int main(const int argc, const char* argv[]) {
         << endl;
 
     // converter (system locale)
-    tconv sysconv(locale(""));
+    typeconverter sysconv(locale(""));
     cout
         << setw(16) << "classic locale" << conv.strfrom(1000000) << "\n"
         << setw(16) << "system locale"  << sysconv.strfrom(1000000) << "\n"

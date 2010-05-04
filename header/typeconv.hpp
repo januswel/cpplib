@@ -1,13 +1,13 @@
 /*
- * tconv.hpp
+ * typeconv.hpp
  *  a class to convert types by routing through std::string / std::wstring
  *
  *  written by janus_wel<janus.wel.3@gmail.com>
  *  This source code is in the public domain, and has NO WARRANTY.
  * */
 
-#ifndef TCONV_HPP
-#define TCONV_HPP
+#ifndef TYPECONV_HPP
+#define TYPECONV_HPP
 
 #include <locale>
 #include <sstream>
@@ -28,7 +28,7 @@ namespace util {
 
         // type converter
         template<typename Char, typename Traits = char_traits<Char> >
-            class basic_tconv : public std::basic_stringstream<Char> {
+            class basic_typeconverter : public std::basic_stringstream<Char> {
                 private:
                     // for convenience
                     typedef Char                            char_type;
@@ -36,8 +36,10 @@ namespace util {
 
                 public:
                     // constructor
-                    basic_tconv(void) {}
-                    explicit basic_tconv(std::locale loc) { this->imbue(loc); }
+                    basic_typeconverter(void) {}
+                    explicit basic_typeconverter(std::locale loc) {
+                        this->imbue(loc);
+                    }
 
                     // specified type -> std::basic_string
                     // This can be omitted specifying T because tye type
@@ -65,10 +67,10 @@ namespace util {
             };
 
         // for convenience
-        typedef basic_tconv<char>    tconv;
-        typedef basic_tconv<wchar_t> wtconv;
+        typedef basic_typeconverter<char>    typeconverter;
+        typedef basic_typeconverter<wchar_t> wtypeconverter;
     }
 }
 
-#endif // TCONV_HPP
+#endif // TYPECONV_HPP
 

@@ -7,7 +7,7 @@
  * */
 
 #include "../../header/wexcept.hpp"
-#include "../../header/tconv.hpp"
+#include "../../header/typeconv.hpp"
 #include <iostream>
 #include <locale>
 
@@ -18,7 +18,7 @@ using namespace util::string;
 int main(const int argc, const char* argv[]) {
     // use system locale
     std::locale::global(std::locale(""));
-    tconv conv;
+    typeconverter conv;
 
     try {
         if (argc < 3)
