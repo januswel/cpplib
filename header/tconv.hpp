@@ -47,23 +47,24 @@ namespace util {
                     // This can be omitted specifying T because tye type
                     // inference always works.
                     template<typename T>
-                        string_type strfrom(T num) {
-                            ss.clear(); ss.str(Traits::null());
+                        string_type strfrom(T src) {
+                            ss.clear();
+                            ss.str(Traits::null());
 
-                            ss << num;
+                            ss << src;
                             return ss.str();
                         }
 
                     // std::basic_string -> specified type
                     // This must be specified T
                     template<typename T>
-                        T strto(const string_type& str) {
+                        T strto(const string_type& src) {
                             ss.clear();
 
-                            ss.str(str);
-                            T num;
-                            ss >> num;
-                            return num;
+                            ss.str(src);
+                            T dst;
+                            ss >> dst;
+                            return dst;
                         }
             };
 
