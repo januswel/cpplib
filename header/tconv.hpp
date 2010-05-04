@@ -28,42 +28,38 @@ namespace util {
 
         // type converter
         template<typename Char, typename Traits = char_traits<Char> >
-            class basic_tconv {
+            class basic_tconv : public std::basic_stringstream<Char> {
                 private:
                     // for convenience
-                    typedef Char                                char_type;
-                    typedef std::basic_string<char_type>        string_type;
-                    typedef std::basic_stringstream<char_type>  stream_type;
-
-                    // member variables
-                    stream_type ss;
+                    typedef Char                            char_type;
+                    typedef std::basic_string<char_type>    string_type;
 
                 public:
                     // constructor
                     basic_tconv(void) {}
-                    explicit basic_tconv(std::locale loc) { ss.imbue(loc); }
+                    explicit basic_tconv(std::locale loc) { this->imbue(loc); }
 
                     // specified type -> std::basic_string
                     // This can be omitted specifying T because tye type
                     // inference always works.
                     template<typename T>
                         string_type strfrom(T src) {
-                            ss.clear();
-                            ss.str(Traits::null());
+                            this->clear();
+                            this->str(Traits::null());
 
-                            ss << src;
-                            return ss.str();
+                            *this << src;
+                            return this->str();
                         }
 
                     // std::basic_string -> specified type
                     // This must be specified T
                     template<typename T>
                         T strto(const string_type& src) {
-                            ss.clear();
+                            this->clear();
 
-                            ss.str(src);
+                            this->str(src);
                             T dst;
-                            ss >> dst;
+                            *this >> dst;
                             return dst;
                         }
             };

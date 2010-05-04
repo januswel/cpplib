@@ -67,6 +67,14 @@ int main(const int argc, const char* argv[]) {
             << endl;
     }
 
+    unsigned int n = 255;
+    double d = 0.12345678;
+    conv << std::fixed << std::setprecision(3) << std::hex;
+    cout
+        << n << " -> " << conv.strfrom(n) << "\n"
+        << d << " -> " << conv.strfrom(d) << "\n"
+        << endl;
+
     return 0;
 }
 
