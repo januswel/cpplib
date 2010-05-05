@@ -12,6 +12,9 @@
 #include <locale>
 #include <sstream>
 #include <string>
+#include <vector>
+
+#include "string.hpp"
 
 namespace util {
     namespace string {
@@ -67,6 +70,7 @@ namespace util {
                             return dst;
                         }
 
+                    // some elements of any type -> std::basic_string
                     template<typename InputIterator>
                         string_type join(
                                 InputIterator first, InputIterator last,
@@ -81,6 +85,59 @@ namespace util {
                             while (first != last) *this << delimeter << *first++;
                             return this->str();
                         }
+
+                    // std::basic_string -> some elements of any type
+                    template<typename SequenceContainer>
+                        SequenceContainer&
+                        split(  const string_type& src,
+                                SequenceContainer& result,
+                                const char_type* const delimeter) {
+                            unsigned int n =
+                                util::string::count(src, delimeter);
+                            if (n == 0) return result;
+
+                            result.resize(n + 1);
+                            search_push(src, delimeter, n, result.begin());
+
+                            return result;
+                        }
+
+                    // for std::vector
+                    template<typename Value>
+                        std::vector<Value>&
+                        split(  const string_type& src,
+                                std::vector<Value>& result,
+                                const char_type* const delimeter) {
+                            unsigned int n =
+                                util::string::count(src, delimeter);
+                            if (n == 0) return result;
+
+                            result.resize(n + 1);
+                            result.reserve(n + 1);
+                            search_push(src, delimeter, n, result.begin());
+
+                            return result;
+                        }
+
+                protected:
+                    // common procedure for split
+                    template<typename OutputIterator>
+                    void search_push(const string_type& src,
+                                const char_type* const delimeter,
+                                const unsigned int n,
+                                OutputIterator first) {
+                        typename string_type::size_type head = 0;
+                        typename string_type::size_type tail;
+                        for (unsigned int i = 0; i < n + 1; ++i) {
+                            tail = src.find(delimeter, head);
+
+                            this->clear();
+                            this->str(src.substr(head, tail - head));
+                            *this >> *first++;
+
+                            head = tail + 1;
+                        }
+                    }
             };
 
         // for convenience

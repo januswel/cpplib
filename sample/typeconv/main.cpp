@@ -7,9 +7,13 @@
  * */
 
 #include "../../header/typeconv.hpp"
-#include <iostream>
+
+#include <algorithm>
 #include <iomanip>
+#include <iostream>
+#include <iterator>
 #include <locale>
+#include <vector>
 
 using namespace std;
 using namespace util::string;
@@ -84,6 +88,12 @@ int main(const int argc, const char* argv[]) {
         << conv.join(i, i + 7) << "\n"
         << conv.join(i, i + 7, " -> ") << "\n"
         << endl;
+
+    // split
+    std::vector<int> is;
+    std::string joined = conv.join(i, i + 7, ", ");
+    conv.split(joined, is, ", ");
+    std::copy(is.begin(), is.end(), std::ostream_iterator<int>(std::cout, "\n"));
 
     return 0;
 }
