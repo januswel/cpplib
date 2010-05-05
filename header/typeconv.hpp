@@ -74,7 +74,7 @@ namespace util {
                     template<typename InputIterator>
                         string_type join(
                                 InputIterator first, InputIterator last,
-                                const string_type& delimeter = Traits::space()) {
+                                const string_type& delimiter = Traits::space()) {
                             if (first == last)
                                 return string_type(Traits::null());
 
@@ -82,7 +82,7 @@ namespace util {
                             this->str(Traits::null());
 
                             *this << *first++;
-                            while (first != last) *this << delimeter << *first++;
+                            while (first != last) *this << delimiter << *first++;
                             return this->str();
                         }
 
@@ -91,13 +91,13 @@ namespace util {
                         SequenceContainer&
                         split(  const string_type& src,
                                 SequenceContainer& result,
-                                const char_type* const delimeter) {
+                                const char_type* const delimiter) {
                             unsigned int n =
-                                util::string::count(src, delimeter);
+                                util::string::count(src, delimiter);
                             if (n == 0) return result;
 
                             result.resize(n + 1);
-                            search_push(src, delimeter, n, result.begin());
+                            search_push(src, delimiter, n, result.begin());
 
                             return result;
                         }
@@ -107,14 +107,14 @@ namespace util {
                         std::vector<Value>&
                         split(  const string_type& src,
                                 std::vector<Value>& result,
-                                const char_type* const delimeter) {
+                                const char_type* const delimiter) {
                             unsigned int n =
-                                util::string::count(src, delimeter);
+                                util::string::count(src, delimiter);
                             if (n == 0) return result;
 
                             result.resize(n + 1);
                             result.reserve(n + 1);
-                            search_push(src, delimeter, n, result.begin());
+                            search_push(src, delimiter, n, result.begin());
 
                             return result;
                         }
@@ -123,13 +123,13 @@ namespace util {
                     // common procedure for split
                     template<typename OutputIterator>
                     void search_push(const string_type& src,
-                                const char_type* const delimeter,
+                                const char_type* const delimiter,
                                 const unsigned int n,
                                 OutputIterator first) {
                         typename string_type::size_type head = 0;
                         typename string_type::size_type tail;
                         for (unsigned int i = 0; i < n + 1; ++i) {
-                            tail = src.find(delimeter, head);
+                            tail = src.find(delimiter, head);
 
                             this->clear();
                             this->str(src.substr(head, tail - head));
