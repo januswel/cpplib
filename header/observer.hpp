@@ -9,6 +9,8 @@
 #ifndef OBSERBER_HPP
 #define OBSERBER_HPP
 
+#include <algorithm>
+#include <functional>
 #include <list>
 
 namespace pattern {
@@ -90,11 +92,11 @@ namespace pattern {
                 // Should we use std::for_each(3) ?
                 void notify_state(void) {
                     state_type s = subject_state();
-                    for (observer_array_iterator itr = observers.begin();
-                            itr != observers.end();
-                            ++itr) {
-                        (*itr)->update_state(s);
-                    }
+                    std::for_each(
+                            observers.begin(), observers.end(),
+                            std::bind2nd(
+                                std::mem_fun(&observer_type::update_state),
+                                s));
                 }
 
             protected:

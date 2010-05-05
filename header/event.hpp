@@ -9,6 +9,8 @@
 #ifndef EVENT_HPP
 #define EVENT_HPP
 
+#include <algorithm>
+#include <functional>
 #include <list>
 
 namespace pattern {
@@ -90,11 +92,11 @@ namespace pattern {
             protected:
                 // send the event to event listners
                 void dispatch_event(const event_type& e) {
-                    for (listener_array_iterator itr = listeners.begin();
-                            itr != listeners.end();
-                            ++itr) {
-                        (*itr)->handle_event(e);
-                    }
+                    std::for_each(
+                            listeners.begin(), listeners.end(),
+                            std::bind2nd(
+                                std::mem_fun(&listener_type::handle_event),
+                                e));
                 }
         };
 

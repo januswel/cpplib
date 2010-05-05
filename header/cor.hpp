@@ -12,6 +12,8 @@
 #include <list>
 #include <string>
 #include <stdexcept>
+#include <algorithm>
+#include <functional>
 
 namespace pattern {
     namespace cor {
@@ -112,13 +114,15 @@ namespace pattern {
 
                 // the function to follow the chain
                 return_type request_to_chain(const data_type& data) {
-                    for (handler_array_iterator itr = chain.begin();
-                            itr != chain.end(); ++itr) {
-                        if ((*itr)->is_in_charge(data)) {
-                            return (*itr)->handle_responsibility(data);
-                        }
-                    }
-                    return at_end_of_chain(data);
+                    handler_array_iterator in_charge =
+                        std::find_if(
+                                chain.begin(), chain.end(),
+                                std::bind2nd(
+                                    std::mem_fun(&handler_type::is_in_charge),
+                                    data));
+                    return (in_charge != chain.end()
+                            ? (*in_charge)->handle_responsibility(data)
+                            : at_end_of_chain(data));
                 }
         };
 
@@ -163,14 +167,15 @@ namespace pattern {
 
                 // the function to follow the chain
                 void request_to_chain(const data_type& data) {
-                    for (handler_array_iterator itr = chain.begin();
-                            itr != chain.end();
-                            ++itr) {
-                        if ((*itr)->is_in_charge(data)) {
-                            (*itr)->handle_responsibility(data);
-                        }
-                    }
-                    at_end_of_chain(data);
+                    handler_array_iterator in_charge =
+                        std::find_if(
+                                chain.begin(), chain.end(),
+                                std::bind2nd(
+                                    std::mem_fun(&handler_type::is_in_charge),
+                                    data));
+                    (in_charge != chain.end()
+                            ? (*in_charge)->handle_responsibility(data)
+                            : at_end_of_chain(data));
                 }
         };
     }
