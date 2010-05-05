@@ -77,10 +77,10 @@ int main(const int argc, const char* const argv[]) {
     util::algorithm::print_if(params.begin(), params.end(), soitr, has<char>(std::ctype_base::punct));
     std::cout << std::endl;
 
-// emulation of "grep" statement in Perl
-//    string_array_type greped(std::count_if(params.begin(), params.end(), has_digit<char>()));
-//    util::algorithm::copy_if(params.begin(), params.end(), greped.begin(), has_digit<char>());
-//    util::algorithm::print(greped.begin(), greped.end(), soitr);
+    std::cout << "grep std::strings that have any alphabets from packed argv\n";
+    string_array_type greped;
+    util::algorithm::grep(params.begin(), params.end(), greped, has<char>(std::ctype_base::alpha));
+    util::algorithm::print(greped.begin(), greped.end(), soitr);
 
     return 0;
 }

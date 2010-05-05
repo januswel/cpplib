@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <vector>
 
 namespace util {
     namespace algorithm {
@@ -101,7 +102,7 @@ namespace util {
             inline OstreamIterator
             print_if(   InputIterator first, InputIterator last,
                         OstreamIterator out, Predicate pred) {
-                return copy_if(first, last, out, pred);
+                return util::algorithm::copy_if(first, last, out, pred);
             }
 
         // the version that the type of delimiter is const char_type* const
@@ -117,6 +118,29 @@ namespace util {
                         std::ostream_iterator<  Value,
                                                 typename Ostream::char_type>(
                             ostream, delimiter), pred);
+            }
+
+        template<   typename InputIterator, typename SequenceContainer,
+                    typename Predicate>
+            inline SequenceContainer&
+            grep(   InputIterator first, InputIterator last,
+                    SequenceContainer& result, Predicate pred) {
+                unsigned int n = std::count_if(first, last, pred);
+                result.resize(n);
+                util::algorithm::copy_if(first, last, result.begin(), pred);
+                return result;
+            }
+
+        template<   typename InputIterator, typename Value,
+                    typename Predicate>
+            inline std::vector<Value>&
+            grep(   InputIterator first, InputIterator last,
+                    std::vector<Value>& result, Predicate pred) {
+                unsigned int n = std::count_if(first, last, pred);
+                result.resize(n);
+                result.reserve(n);
+                util::algorithm::copy_if(first, last, result.begin(), pred);
+                return result;
             }
     }
 }
