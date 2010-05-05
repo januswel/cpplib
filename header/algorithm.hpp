@@ -120,14 +120,15 @@ namespace util {
                             ostream, delimiter), pred);
             }
 
+        // grep in Perl
         template<   typename InputIterator, typename SequenceContainer,
                     typename Predicate>
             inline SequenceContainer&
             grep(   InputIterator first, InputIterator last,
                     SequenceContainer& result, Predicate pred) {
-                unsigned int n = std::count_if(first, last, pred);
-                result.resize(n);
-                util::algorithm::copy_if(first, last, result.begin(), pred);
+                result.resize(0);
+                for (; first != last; ++first)
+                    if (pred(*first)) result.push_back(*first);
                 return result;
             }
 

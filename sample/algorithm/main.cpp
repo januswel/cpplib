@@ -82,6 +82,11 @@ int main(const int argc, const char* const argv[]) {
     util::algorithm::grep(params.begin(), params.end(), greped, has<char>(std::ctype_base::alpha));
     util::algorithm::print(greped.begin(), greped.end(), soitr);
 
+    std::cout << "grep std::strings that have any alphabets from packed argv\n";
+    std::list<std::string> lgreped;
+    util::algorithm::grep(params.begin(), params.end(), lgreped, has<char>(std::ctype_base::alpha));
+    util::algorithm::print(lgreped.begin(), lgreped.end(), soitr);
+
     return 0;
 }
 
