@@ -8,7 +8,7 @@
 *.pdb
 
 # for gcc
-a.out
+*.out
 *.o
 
 # for Vim
