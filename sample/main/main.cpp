@@ -6,7 +6,6 @@
  *  This source code is in public domain, and has NO WARRANTY.
  * */
 
-#include "../../header/algorithm.hpp"
 #include "../../header/main.hpp"
 #include "../../header/typeconv.hpp"
 
@@ -122,15 +121,11 @@ class Main : public util::main::main {
 
     public:
         int start(void) {
-            string_array_type unknown_opt;
-            util::algorithm::grep(
-                    nonopt_parameters.begin(), nonopt_parameters.end(),
-                    unknown_opt, option_type::has_opt_prefix);
-            if (!unknown_opt.empty()) {
+            if (!unknown_opt_params.empty()) {
                 throw std::runtime_error("unknown option: "
                         + tconv().join(
-                            unknown_opt.begin(),
-                            unknown_opt.end(), ", "));
+                            unknown_opt_params.begin(),
+                            unknown_opt_params.end(), ", "));
             }
 
             if (nonopt_parameters.size() > 1) {

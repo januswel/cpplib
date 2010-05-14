@@ -48,6 +48,7 @@ namespace util {
                 string_type program_name;
                 string_array_type parameters;
                 string_array_type nonopt_parameters;
+                string_array_type unknown_opt_params;
 
             public:
                 // virtual functions to be implemented at sub class
@@ -60,18 +61,26 @@ namespace util {
                 // pack parameters as std::string and analyze options
                 unsigned int do_parameters(const int argc, const char* const argv[]) {
                     program_name = argv[0];
+
                     parameters.resize(argc - 1);
                     parameters.reserve(argc - 1);
                     std::copy(argv + 1, argv + argc, parameters.begin());
 
                     nonopt_parameters.reserve(argc - 1);
+                    unknown_opt_params.reserve(argc - 1);
+
                     return this->analyze(parameters);
                 }
 
             protected:
                 // implementations for member functions from super class
                 unsigned int handle_nonopt(const parameters_type& params) {
-                    nonopt_parameters.push_back(*(params.current()));
+                    const string_type& current = *(params.current());
+
+                    option_type::has_opt_prefix(current)
+                        ? unknown_opt_params.push_back(current)
+                        : nonopt_parameters.push_back(current);
+
                     return 1;
                 }
         };
@@ -89,6 +98,7 @@ namespace util {
                 string_type program_name;
                 string_array_type parameters;
                 string_array_type nonopt_parameters;
+                string_array_type unknown_opt_params;
                 util::string::nwconv nwconv;
 
             public:
@@ -102,19 +112,27 @@ namespace util {
                 // pack parameters as std::wstring and analyze options
                 unsigned int do_parameters(const int argc, const char* const argv[]) {
                     program_name = nwconv.ntow(argv[0]);
+
                     parameters.reserve(argc);
                     for (int i = 1; i < argc; ++i) {
                         parameters.push_back(nwconv.ntow(argv[i]));
                     }
 
                     nonopt_parameters.reserve(argc - 1);
+                    unknown_opt_params.reserve(argc - 1);
+
                     return this->analyze(parameters);
                 }
 
             protected:
                 // implementations for member functions from super class
                 unsigned int handle_nonopt(const parameters_type& params) {
-                    nonopt_parameters.push_back(*(params.current()));
+                    const string_type& current = *(params.current());
+
+                    option_type::has_opt_prefix(current)
+                        ? unknown_opt_params.push_back(current)
+                        : nonopt_parameters.push_back(current);
+
                     return 1;
                 }
         };
