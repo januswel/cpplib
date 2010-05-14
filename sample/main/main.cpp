@@ -121,11 +121,11 @@ class Main : public util::main::main {
 
     public:
         int start(void) {
-            if (!unknown_opt_params.empty()) {
+            if (!unknown_opt_parameters.empty()) {
                 throw std::runtime_error("unknown option: "
                         + tconv().join(
-                            unknown_opt_params.begin(),
-                            unknown_opt_params.end(), ", "));
+                            unknown_opt_parameters.begin(),
+                            unknown_opt_parameters.end(), ", "));
             }
 
             if (nonopt_parameters.size() > 1) {

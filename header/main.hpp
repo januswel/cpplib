@@ -48,7 +48,7 @@ namespace util {
                 string_type program_name;
                 string_array_type parameters;
                 string_array_type nonopt_parameters;
-                string_array_type unknown_opt_params;
+                string_array_type unknown_opt_parameters;
 
             public:
                 // virtual functions to be implemented at sub class
@@ -67,7 +67,7 @@ namespace util {
                     std::copy(argv + 1, argv + argc, parameters.begin());
 
                     nonopt_parameters.reserve(argc - 1);
-                    unknown_opt_params.reserve(argc - 1);
+                    unknown_opt_parameters.reserve(argc - 1);
 
                     return this->analyze(parameters);
                 }
@@ -78,7 +78,7 @@ namespace util {
                     const string_type& current = *(params.current());
 
                     option_type::has_opt_prefix(current)
-                        ? unknown_opt_params.push_back(current)
+                        ? unknown_opt_parameters.push_back(current)
                         : nonopt_parameters.push_back(current);
 
                     return 1;
@@ -98,7 +98,7 @@ namespace util {
                 string_type program_name;
                 string_array_type parameters;
                 string_array_type nonopt_parameters;
-                string_array_type unknown_opt_params;
+                string_array_type unknown_opt_parameters;
                 util::string::nwconv nwconv;
 
             public:
@@ -119,7 +119,7 @@ namespace util {
                     }
 
                     nonopt_parameters.reserve(argc - 1);
-                    unknown_opt_params.reserve(argc - 1);
+                    unknown_opt_parameters.reserve(argc - 1);
 
                     return this->analyze(parameters);
                 }
@@ -130,7 +130,7 @@ namespace util {
                     const string_type& current = *(params.current());
 
                     option_type::has_opt_prefix(current)
-                        ? unknown_opt_params.push_back(current)
+                        ? unknown_opt_parameters.push_back(current)
                         : nonopt_parameters.push_back(current);
 
                     return 1;

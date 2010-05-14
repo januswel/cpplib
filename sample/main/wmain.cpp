@@ -121,11 +121,11 @@ class Main : public util::main::wmain {
 
     public:
         int start(void) {
-            if (!unknown_opt_params.empty()) {
+            if (!unknown_opt_parameters.empty()) {
                 throw util::exception::wruntime_error(L"unknown option: "
                         + tconv().join(
-                            unknown_opt_params.begin(),
-                            unknown_opt_params.end(), L", "));
+                            unknown_opt_parameters.begin(),
+                            unknown_opt_parameters.end(), L", "));
             }
 
             if (nonopt_parameters.size() > 1) {
