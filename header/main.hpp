@@ -64,7 +64,7 @@ namespace util {
                     parameters.reserve(argc - 1);
                     std::copy(argv + 1, argv + argc, parameters.begin());
 
-                    return this->analyze(parameters);
+                    return this->analyze_option(parameters);
                 }
         };
 
@@ -99,7 +99,7 @@ namespace util {
                         parameters.push_back(nwconv.ntow(argv[i]));
                     }
 
-                    return this->analyze(parameters);
+                    return this->analyze_option(parameters);
                 }
         };
 

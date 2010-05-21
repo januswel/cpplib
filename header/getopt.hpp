@@ -206,7 +206,7 @@ namespace util {
          *         and 3, and register the subclasses's objects of the class
          *         basic_option on the subclass's object of this class by using
          *         the member function register_option().
-         *      5. Call the member function analyze() with an object of
+         *      5. Call the member function analyze_option() with an object of
          *         std::vector<string_type> that has parameters.
          * */
         template<typename Char>
@@ -263,7 +263,7 @@ namespace util {
                 }
 
                 // main function
-                unsigned int analyze(string_array_type& data) {
+                unsigned int analyze_option(string_array_type& data) {
                     parameters_type params(data);
                     unsigned int processed = 0;
                     while (params.current() != params.end()) {
@@ -275,11 +275,11 @@ namespace util {
                     return processed;
                 }
 
-                unsigned int analyze(const int argc, const char_type* const argv[]) {
+                unsigned int analyze_option(const int argc, const char_type* const argv[]) {
                     string_array_type data;
                     data.reserve(argc);
                     for (int i = 1; i < argc; ++i) data.push_back(argv[i]);
-                    return analyze(data);
+                    return analyze_option(data);
                 }
         };
 

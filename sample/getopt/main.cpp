@@ -236,7 +236,7 @@ int main(const int argc, const char* const argv[]) {
     try {
         OptState os;
         MyGetOpt opt(os);
-        opt.analyze(argc, argv);
+        opt.analyze_option(argc, argv);
 
         std::cout << std::left << std::boolalpha
             << std::setw(10) << "version"    << os.version() << "\n"
