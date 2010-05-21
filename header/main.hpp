@@ -47,8 +47,6 @@ namespace util {
                 // member variables
                 string_type program_name;
                 string_array_type parameters;
-                string_type nonopt_parameter;
-                string_array_type unknown_opt_parameters;
 
             public:
                 // virtual functions to be implemented at sub class
@@ -66,30 +64,8 @@ namespace util {
                     parameters.reserve(argc - 1);
                     std::copy(argv + 1, argv + argc, parameters.begin());
 
-                    unknown_opt_parameters.reserve(argc - 1);
-
                     return this->analyze(parameters);
                 }
-
-            protected:
-                // implementations for member functions from super class
-                unsigned int handle_nonopt(const parameters_type& params) {
-                    const string_type& current = *(params.current());
-
-                    if (option_type::has_opt_prefix(current)) {
-                        unknown_opt_parameters.push_back(current);
-                    }
-                    else if (params.current() + 1  != params.end()) {
-                        handle_behind_parameters(params);
-                    }
-                    else {
-                        nonopt_parameter = current;
-                    }
-
-                    return 1;
-                }
-
-                virtual void handle_behind_parameters(const parameters_type&) = 0;
         };
 
         template<> class basic_main<wchar_t>
@@ -104,8 +80,6 @@ namespace util {
                 // member variables
                 string_type program_name;
                 string_array_type parameters;
-                string_type nonopt_parameter;
-                string_array_type unknown_opt_parameters;
                 util::string::nwconv nwconv;
 
             public:
@@ -125,30 +99,8 @@ namespace util {
                         parameters.push_back(nwconv.ntow(argv[i]));
                     }
 
-                    unknown_opt_parameters.reserve(argc - 1);
-
                     return this->analyze(parameters);
                 }
-
-            protected:
-                // implementations for member functions from super class
-                unsigned int handle_nonopt(const parameters_type& params) {
-                    const string_type& current = *(params.current());
-
-                    if (option_type::has_opt_prefix(current)) {
-                        unknown_opt_parameters.push_back(current);
-                    }
-                    else if (params.current() + 1  != params.end()) {
-                        handle_behind_parameters(params);
-                    }
-                    else {
-                        nonopt_parameter = current;
-                    }
-
-                    return 1;
-                }
-
-                virtual void handle_behind_parameters(const parameters_type&) = 0;
         };
 
         // for convenience

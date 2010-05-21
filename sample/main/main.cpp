@@ -11,9 +11,10 @@
 
 #include <iomanip>
 #include <iostream>
-#include <string>
-#include <stdexcept>
+#include <list>
 #include <locale>
+#include <stdexcept>
+#include <string>
 
 class Main : public util::main::main {
     public:
@@ -111,10 +112,22 @@ class Main : public util::main::main {
                 }
         } opt_output;
 
+    private:
+        string_type input;
+        std::list<string_type> unknown_opt;
+
     protected:
-        void handle_behind_parameters(const parameters_type&) {
+        unsigned int handle_unknown_opt(const parameters_type& params) {
+            unknown_opt.push_back(*(params.current()));
+            return 1;
+        }
+        unsigned int handle_behind_parameters(const parameters_type&) {
             throw std::runtime_error(
                     "don't specify anything behind the nonopt parameter.");
+        }
+        unsigned int handle_nonopt(const parameters_type& params) {
+            input = *(params.current());
+            return 1;
         }
 
     public:
@@ -127,14 +140,15 @@ class Main : public util::main::main {
 
     public:
         int start(void) {
-            if (!unknown_opt_parameters.empty()) {
-                throw std::runtime_error("unknown option: "
-                        + tconv().join(
-                            unknown_opt_parameters.begin(),
-                            unknown_opt_parameters.end(), ", "));
+            if (!unknown_opt.empty()) {
+                std::cerr
+                    << "unknown options: "
+                    << tconv().join(
+                            unknown_opt.begin(),
+                            unknown_opt.end(), ", ") << "\n"
+                    << std::endl;
+                return 1;
             }
-
-            const string_type& input = nonopt_parameter;
 
             if (util::main::is_redirected()) {
                 std::cout.rdbuf(std::cerr.rdbuf());
