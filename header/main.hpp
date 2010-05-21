@@ -47,7 +47,7 @@ namespace util {
                 // member variables
                 string_type program_name;
                 string_array_type parameters;
-                string_array_type nonopt_parameters;
+                string_type nonopt_parameter;
                 string_array_type unknown_opt_parameters;
 
             public:
@@ -66,7 +66,6 @@ namespace util {
                     parameters.reserve(argc - 1);
                     std::copy(argv + 1, argv + argc, parameters.begin());
 
-                    nonopt_parameters.reserve(argc - 1);
                     unknown_opt_parameters.reserve(argc - 1);
 
                     return this->analyze(parameters);
@@ -77,12 +76,20 @@ namespace util {
                 unsigned int handle_nonopt(const parameters_type& params) {
                     const string_type& current = *(params.current());
 
-                    option_type::has_opt_prefix(current)
-                        ? unknown_opt_parameters.push_back(current)
-                        : nonopt_parameters.push_back(current);
+                    if (option_type::has_opt_prefix(current)) {
+                        unknown_opt_parameters.push_back(current);
+                    }
+                    else if (params.current() + 1  != params.end()) {
+                        handle_behind_parameters(params);
+                    }
+                    else {
+                        nonopt_parameter = current;
+                    }
 
                     return 1;
                 }
+
+                virtual void handle_behind_parameters(const parameters_type&) = 0;
         };
 
         template<> class basic_main<wchar_t>
@@ -97,7 +104,7 @@ namespace util {
                 // member variables
                 string_type program_name;
                 string_array_type parameters;
-                string_array_type nonopt_parameters;
+                string_type nonopt_parameter;
                 string_array_type unknown_opt_parameters;
                 util::string::nwconv nwconv;
 
@@ -118,7 +125,6 @@ namespace util {
                         parameters.push_back(nwconv.ntow(argv[i]));
                     }
 
-                    nonopt_parameters.reserve(argc - 1);
                     unknown_opt_parameters.reserve(argc - 1);
 
                     return this->analyze(parameters);
@@ -129,12 +135,20 @@ namespace util {
                 unsigned int handle_nonopt(const parameters_type& params) {
                     const string_type& current = *(params.current());
 
-                    option_type::has_opt_prefix(current)
-                        ? unknown_opt_parameters.push_back(current)
-                        : nonopt_parameters.push_back(current);
+                    if (option_type::has_opt_prefix(current)) {
+                        unknown_opt_parameters.push_back(current);
+                    }
+                    else if (params.current() + 1  != params.end()) {
+                        handle_behind_parameters(params);
+                    }
+                    else {
+                        nonopt_parameter = current;
+                    }
 
                     return 1;
                 }
+
+                virtual void handle_behind_parameters(const parameters_type&) = 0;
         };
 
         // for convenience

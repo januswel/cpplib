@@ -111,6 +111,12 @@ class Main : public util::main::main {
                 }
         } opt_output;
 
+    protected:
+        void handle_behind_parameters(const parameters_type&) {
+            throw std::runtime_error(
+                    "don't specify anything behind the nonopt parameter.");
+        }
+
     public:
         Main(void) {
             register_option(opt_version);
@@ -128,13 +134,7 @@ class Main : public util::main::main {
                             unknown_opt_parameters.end(), ", "));
             }
 
-            if (nonopt_parameters.size() > 1) {
-                throw std::runtime_error("too many parameters");
-            }
-
-            const string_type& input = nonopt_parameters.empty()
-                ? std::string()
-                : nonopt_parameters[0];
+            const string_type& input = nonopt_parameter;
 
             if (util::main::is_redirected()) {
                 std::cout.rdbuf(std::cerr.rdbuf());
