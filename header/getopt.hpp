@@ -225,6 +225,10 @@ namespace util {
 
             protected:
                 // member functions to be overridden
+                virtual unsigned int
+                    handle_unknown_opt(const parameters_type&) = 0;
+                virtual unsigned int
+                    handle_behind_parameters(const parameters_type&) = 0;
                 virtual unsigned int handle_nonopt(const parameters_type&) = 0;
 
             public:
@@ -235,7 +239,15 @@ namespace util {
                 // implementations for the virtual member functions of the
                 // super class
                 unsigned int at_end_of_chain(const parameters_type& params) {
-                    return handle_nonopt(params);
+                    if (option_type::has_opt_prefix(*(params.current()))) {
+                        return handle_unknown_opt(params);
+                    }
+                    else if (params.current() + 1  != params.end()) {
+                        return handle_behind_parameters(params);
+                    }
+                    else {
+                        return handle_nonopt(params);
+                    }
                 }
 
             public:

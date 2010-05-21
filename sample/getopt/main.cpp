@@ -184,24 +184,27 @@ class MyGetOpt : public util::getopt::getopt, public EventSourceStr {
         } opt_output;
 
     protected:
+        // unknown-option handler
+        unsigned int handle_unknown_opt(const parameters_type& params) {
+            DBGLOG("handle_unknown_opt");
+
+            throw std::runtime_error("unknown option: " + *(params.current()));
+        }
+
+        // parameters behind nonopt-parameter handler
+        unsigned int handle_behind_parameters(const parameters_type&) {
+            DBGLOG("handle_behind_parameters");
+
+            throw std::runtime_error("too many parameters.");
+        }
+
         // non-option handler
         unsigned int handle_nonopt(const parameters_type& params) {
             DBGLOG("handle_nonopt");
 
-            const string_type& current = *(params.current());
-
-            if (option_type::has_opt_prefix(current)) {
-                throw std::runtime_error("unknown option: " + current);
-            }
-
-            if (params.current() + 1 == params.end()) {
-                EventStr event = {INPUT, current};
-                dispatch_event(event);
-                return 1;
-            }
-            else {
-                throw std::runtime_error("too many parameters.");
-            }
+            EventStr event = {INPUT, *(params.current())};
+            dispatch_event(event);
+            return 1;
         }
 
     public:
