@@ -13,6 +13,7 @@
 #include "cor.hpp"
 
 #include <cassert>
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -282,9 +283,9 @@ namespace util {
                 }
 
                 unsigned int analyze_option(const int argc, const char_type* const argv[]) {
-                    string_array_type data;
-                    data.reserve(argc);
-                    for (int i = 1; i < argc; ++i) data.push_back(argv[i]);
+                    string_array_type data(argc - 1);
+                    data.reserve(argc - 1);
+                    std::copy(argv + 1, argv + argc, data.begin());
                     return analyze_option(data);
                 }
         };
