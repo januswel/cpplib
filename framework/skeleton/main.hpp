@@ -88,9 +88,7 @@ class Main
         }
 
         // option analysis and error handling
-        void preparation(const int argc, const char* const argv[]) {
-            analyze_option(argc, argv);
-
+        void preparation(void) {
             if (!unknown_opt.empty()) {
                 throw sample_error(BAD_ARGUMENT,
                         "unknown options: "

@@ -30,7 +30,8 @@ int main(const int argc, const char* const argv[]) {
     try {
         std::locale::global(std::locale(""));
         Main main;
-        main.preparation(argc, argv);
+        main.analyze_option(argc, argv);
+        main.preparation();
         return main.start();
     }
     catch (const sample_error& ex) {
