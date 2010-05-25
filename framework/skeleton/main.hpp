@@ -33,8 +33,8 @@ class Main
         priority_type priority;
 
         // member variables
-        std::string input;
-        std::list<std::string> unknown_opt;
+        string_type input;
+        std::list<string_type> unknown_opt;
         unsigned int size;
 
         // constants
