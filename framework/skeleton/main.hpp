@@ -19,9 +19,6 @@
 #include "helper/event.hpp"
 #include "helper/typeconv.hpp"
 
-// global objects
-util::string::typeconverter tconv;
-
 class Main
     : public util::getopt::getopt,
       public pattern::event::event_listener<priority_type>,

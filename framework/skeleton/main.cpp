@@ -13,6 +13,9 @@
 #include <locale>
 #include <stdexcept>
 
+// global objects
+util::string::typeconverter tconv(locale::classic());
+
 int Main::main(void) {
     if (input.empty()) {
         throw sample_error(BAD_ARGUMENT, "specify input\n");
