@@ -42,17 +42,16 @@ class opt_size_type
         const char_type* shortname(void) const { return "s"; }
         const char_type* longname(void) const { return "size"; }
         unsigned int handle_params(const parameters_type& params) {
-            parameters_type::const_iterator next =
-                params.current() + 1;
-            if (next != params.end()) {
-                event_opt_uint event = {OPT_SIZE, tconv.strto<unsigned int>(*next)};
-                dispatch_event(event);
-                return 2;
-            }
-            else {
+            parameters_type::const_iterator next = params.current() + 1;
+
+            if (next == params.end()) {
                 throw sample_error(BAD_ARGUMENT,
                         "specify size: " + *(params.current()) + "\n");
             }
+
+            event_opt_uint event = {OPT_SIZE, tconv.strto<unsigned int>(*next)};
+            dispatch_event(event);
+            return 2;
         }
 };
 
