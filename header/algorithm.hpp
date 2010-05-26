@@ -15,6 +15,14 @@
 
 namespace util {
     namespace algorithm {
+        // functor to delete objects
+        // usage:
+        //      std::for_each(array.begin(), array.end(), sweeper());
+        struct sweeper {
+            template<typename T>
+            void operator()(T* p) { delete p; }
+        };
+
         // copy_if
         template<   typename InputIterator, typename OstreamIterator,
                     typename Predicate>

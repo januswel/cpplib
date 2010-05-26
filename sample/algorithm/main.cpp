@@ -39,6 +39,11 @@ class has {
         }
 };
 
+struct o {
+    o(void) { std::cout << "o(void)\n"; }
+    ~o(void) { std::cout << "~o(void)\n"; }
+};
+
 int main(const int argc, const char* const argv[]) {
     typedef std::vector<std::string>    string_array_type;
     //typedef std::list<std::string>  string_array_type;
@@ -86,6 +91,11 @@ int main(const int argc, const char* const argv[]) {
     std::list<std::string> lgreped;
     util::algorithm::grep(params.begin(), params.end(), lgreped, has<char>(std::ctype_base::alpha));
     util::algorithm::print(lgreped.begin(), lgreped.end(), soitr);
+
+    std::cout << "deleting objects by util::algorithm::sweeper\n";
+    std::vector<o*> os;
+    for (int i = 0; i < 3; ++i) os.push_back(new o);
+    std::for_each(os.begin(), os.end(), util::algorithm::sweeper());
 
     return 0;
 }
