@@ -11,6 +11,11 @@
 
 #include <ctime>
 
+/*
+ * TODO: Use "cstdint" when it is available.
+ * */
+#include <stdint.h>
+
 namespace util {
     namespace time {
         class elapsed {
@@ -22,19 +27,19 @@ namespace util {
                 void reset(void) { std::time(&base); }
 
                 /*
-                 *  A return type of this function is __int64
+                 *  A return type of this function is uint64_t
                  *  (maybe, long int), because:
                  *
                  *      - The return type of std::difftime(2) is double.
                  *      - The significand of double is represented by 52 bits.
                  *
                  *  So the smallest type that represents all values of 52 bits
-                 *  is __int64.
+                 *  is uint64_t.
                  *  */
-                unsigned __int64 operator()(void) const {
+                uint64_t operator()(void) const {
                     std::time_t current;
                     std::time(&current);
-                    return static_cast<unsigned __int32>(std::difftime(current, base));
+                    return static_cast<uint64_t>(std::difftime(current, base));
                 }
         };
     }
