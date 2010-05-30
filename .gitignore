@@ -16,3 +16,6 @@
 
 # for dlogger.hpp
 debug.log
+
+# others
+*.wav
