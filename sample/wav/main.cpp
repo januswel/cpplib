@@ -6,12 +6,27 @@
  *  This source code is in public domain, and has NO WARRANTY.
  * */
 
-#include <iomanip>
-#include <iostream>
+#include <algorithm>
 #include <fstream>
-#include <vector>
+#include <functional>
+#include <iostream>
+#include <iterator>
+#include <stdint.h>
 
+#include "../../header/cast.hpp"
+#include "../../header/io.hpp"
 #include "../../header/wav.hpp"
+
+template<const unsigned int Channels, const unsigned int Byte>
+inline void
+channel_filter( std::istream& in, std::ostream& out,
+                format::riff_wav::channel_type ch) {
+    typedef format::riff_wav::basic_sample<Channels, Byte> sample_type;
+    std::istream_iterator<sample_type> eof, iitr(in);
+    std::transform(iitr, eof,
+            std::ostream_iterator<typename sample_type::mono_type>(out),
+            std::bind2nd(std::mem_fun_ref(&sample_type::channel), ch));
+}
 
 int main(const int argc, const char* const argv[]) {
     if (argc < 2) {
@@ -23,75 +38,80 @@ int main(const int argc, const char* const argv[]) {
             44100   // 44.1kHz
         };
         format::riff_wav::header_type outheader(elements);
-        if (!outheader.validate()) {
-            std::cerr
-                << "It seems that something is wrong.\n"
-                << std::endl;
-            return 1;
-        }
+        util::io::set_stdout_binary();
+        std::cout << outheader;
 
-        std::ofstream wout("test.wav");
-        wout << outheader;
         // data is dummy
-        wout
+        std::cout
             << static_cast<char>(-128)
             << static_cast<char>(0)
             << static_cast<char>(127)
             << static_cast<char>(0);
 
-        std::cout
-            << "creating wav file succeeded: test.wav\n"
-            << std::endl;
-
         return 0;
     }
 
+    // mono-ize
     // reading
-    std::ifstream win(argv[1]);
+    std::ifstream win(argv[1], std::ios::binary);
+    if (!win.good()) {
+        std::cerr
+            << "bad file.\n"
+            << std::endl;
+        return 1;
+    }
+
     format::riff_wav::header_type inheader;
     win >> inheader;
     if (!inheader.validate() || !inheader.validate(win)) {
-        std::cerr << "bad wav file: " << argv[1] << std::endl;
+        std::cerr
+            << "bad wav file: " << argv[1] << "\n"
+            << std::endl;
         return 1;
     }
 
-    // copying
-    // preparing header
     format::riff_wav::elements_type elements = inheader.elements();
-    elements.numof_samples = 1;
-    format::riff_wav::header_type outheader(elements);
-    if (!outheader.validate()) {
+    if (elements.channels == 1) {
         std::cerr
-            << "It seems that something is wrong.\n"
+            << "already mono wav file: " << argv[1] << "\n"
             << std::endl;
-        return 1;
+        return 0;
     }
 
-    std::ofstream wout("foo.wav");
+    util::io::set_stdout_binary();
 
-    // write header
-    wout << outheader;
+    format::riff_wav::elements_type outelements = elements;
+    outelements.channels = 1;
+    format::riff_wav::header_type outheader(outelements);
+    std::cout << outheader;
 
-    // write data
-    unsigned int block_size = elements.channels * elements.bit_depth / 8;
-    std::vector<char> buf(block_size);
-    char* buffer = &buf[0];
-    for (unsigned int i = 0; i < elements.numof_samples ; ++i) {
-        win.read(buffer, block_size);
-        wout.write(buffer, block_size);
+    switch (elements.channels) {
+        using namespace format::riff_wav;
+        case 2:
+            switch (elements.bit_depth) {
+                case 8:     channel_filter<2, 1>(win, std::cout, LEFT);
+                            break;
+                case 16:    channel_filter<2, 2>(win, std::cout, LEFT);
+                            break;
+                case 24:    channel_filter<2, 3>(win, std::cout, LEFT);
+                            break;
+                case 32:    channel_filter<2, 4>(win, std::cout, LEFT);
+                            break;
+            }
+            break;
+        case 6:
+            switch (elements.bit_depth) {
+                case 8:     channel_filter<6, 1>(win, std::cout, FRONT_LEFT);
+                            break;
+                case 16:    channel_filter<6, 2>(win, std::cout, FRONT_LEFT);
+                            break;
+                case 24:    channel_filter<6, 3>(win, std::cout, FRONT_LEFT);
+                            break;
+                case 32:    channel_filter<6, 4>(win, std::cout, FRONT_LEFT);
+                            break;
+            }
+            break;
     }
-
-    // validation
-    if (!outheader.validate(wout)) {
-        std::cerr
-            << "copying failed: " << argv[1] << " -> foo.wav\n"
-            << std::endl;
-        return 1;
-    }
-
-    std::cout
-        << "copying wav file succeeded: foo.wav\n"
-        << std::endl;
 
     return 0;
 }

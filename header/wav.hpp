@@ -14,10 +14,10 @@
 #ifndef WAV_HPP
 #define WAV_HPP
 
+#include <cassert>
+#include <fstream>
 #include <istream>
 #include <ostream>
-#include <fstream>
-
 #include <stdint.h>
 
 #include "cast.hpp"
@@ -320,6 +320,92 @@ namespace format {
                     util::cast::constpointer_cast<const char*>(&header),
                     sizeof(header_type));
             return out;
+        }
+
+        enum channel_type {
+            // for mono
+            MONO = 0,
+            // for stereo
+            LEFT = 0,
+            RIGHT,
+            // for 5.1ch
+            FRONT_LEFT = 0,
+            FRONT_RIGHT,
+            FRONT_CENTER,
+            LOW_FREQUENCY,
+            BACK_LEFT,
+            BACK_RIGHT
+        };
+
+        /*
+         *  the class to manipulate data
+         * */
+        template<const unsigned int Channels, const unsigned int Byte>
+        class basic_sample {
+            public:
+                typedef basic_sample<1, Byte>   mono_type;
+                typedef char                    value8_type;
+                typedef uint16_t                value16_type;
+                typedef uint32_t                value24_type;
+                typedef uint32_t                value32_type;
+
+            private:
+                char data[Byte * Channels];
+
+            public:
+                // constructor
+                basic_sample(void) {}
+                basic_sample(const char* rhs) {
+                    std::copy(rhs, rhs + Byte, data);
+                }
+
+                // to get data of a channel
+                mono_type channel(channel_type ch) const {
+                    assert(ch< Channels);
+                    return mono_type(&data[Byte * ch]);
+                }
+
+                // to get value of a channel in the form of char
+                char value8(channel_type ch) const {
+                    assert(ch < Channels);
+                    assert(Byte == 1);
+                    return data[ch];
+                }
+                // to get value of a channel in the form of uint16_t
+                uint16_t value16(channel_type ch) const {
+                    assert(ch < Channels);
+                    assert(Byte == 2);
+                    return *(util::cast::constpointer_cast<const uint16_t*>(
+                                &data[ch * 2]));
+                }
+                // to get value of a channel in the form of uint32_t
+                uint32_t value24(channel_type ch) const {
+                    assert(ch < Channels);
+                    assert(Byte == 3);
+                    return *(util::cast::constpointer_cast<const uint32_t*>(
+                                &data[ch * 4])) & 0x00ffffff;
+                }
+                // to get value of a channel in the form of uint32_t
+                uint32_t value32(channel_type ch) const {
+                    assert(ch < Channels);
+                    assert(Byte == 4);
+                    return *(util::cast::constpointer_cast<const uint32_t*>(
+                                &data[ch * 4]));
+                }
+        };
+
+        template<const unsigned int Channels, const unsigned int Byte>
+        inline std::istream&
+        operator >>(std::istream& i, basic_sample<Channels, Byte>& m) {
+            i.read(util::cast::pointer_cast<char*>(&m), sizeof(m));
+            return i;
+        }
+
+        template<const unsigned int Channels, const unsigned int Byte>
+        inline std::ostream&
+        operator <<(std::ostream& o, const basic_sample<Channels, Byte>& m) {
+            o.write(util::cast::constpointer_cast<const char*>(&m), sizeof(m));
+            return o;
         }
     }
 }
