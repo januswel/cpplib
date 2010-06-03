@@ -201,13 +201,14 @@ namespace format {
                 + sizeof(data_subchunk_type);
 
             // constructor
-            header_type(void) {} explicit header_type(const elements_type& p)
+            header_type(void) {}
+            explicit header_type(const elements_type& p)
                 : id(riff_id),
                   size(p.numof_samples * p.channels * (p.bit_depth / 8) + size_offset),
                   format_kind(wave_kind),
                   fmt_subchunk(p),
                   data_subchunk(p)
-                {}
+            {}
 
             // utility function
             bool validate(void) const {
@@ -361,7 +362,7 @@ namespace format {
 
                 // to get data of a channel
                 mono_type channel(channel_type ch) const {
-                    assert(ch< Channels);
+                    assert(ch < Channels);
                     return mono_type(&data[Byte * ch]);
                 }
 
