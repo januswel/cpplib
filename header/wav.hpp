@@ -362,33 +362,33 @@ namespace format {
 
                 // to get data of a channel
                 mono_type channel(channel_type ch) const {
-                    assert(ch < Channels);
+                    assert(static_cast<unsigned int>(ch) < Channels);
                     return mono_type(&data[Byte * ch]);
                 }
 
                 // to get value of a channel in the form of char
                 char value8(channel_type ch) const {
-                    assert(ch < Channels);
+                    assert(static_cast<unsigned int>(ch) < Channels);
                     assert(Byte == 1);
                     return data[ch];
                 }
                 // to get value of a channel in the form of uint16_t
                 uint16_t value16(channel_type ch) const {
-                    assert(ch < Channels);
+                    assert(static_cast<unsigned int>(ch) < Channels);
                     assert(Byte == 2);
                     return *(util::cast::constpointer_cast<const uint16_t*>(
                                 &data[ch * 2]));
                 }
                 // to get value of a channel in the form of uint32_t
                 uint32_t value24(channel_type ch) const {
-                    assert(ch < Channels);
+                    assert(static_cast<unsigned int>(ch) < Channels);
                     assert(Byte == 3);
                     return *(util::cast::constpointer_cast<const uint32_t*>(
                                 &data[ch * 4])) & 0x00ffffff;
                 }
                 // to get value of a channel in the form of uint32_t
                 uint32_t value32(channel_type ch) const {
-                    assert(ch < Channels);
+                    assert(static_cast<unsigned int>(ch) < Channels);
                     assert(Byte == 4);
                     return *(util::cast::constpointer_cast<const uint32_t*>(
                                 &data[ch * 4]));
