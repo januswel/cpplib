@@ -237,8 +237,7 @@ namespace format {
             }
 
             template<typename Char>
-            inline bool
-            validate(std::basic_istream<Char>& in) const {
+            bool validate(std::basic_istream<Char>& in) const {
                 typename std::basic_istream<Char>::streampos current =
                     in.tellg();
                 in.seekg(0, std::ios::end);
@@ -259,7 +258,7 @@ namespace format {
             }
 
             template<typename Char>
-            inline bool validate(std::basic_ostream<Char>& out) const {
+            bool validate(std::basic_ostream<Char>& out) const {
                 typename std::basic_ostream<Char>::streampos current =
                     out.tellp();
                 out.seekp(0, std::ios::end);
