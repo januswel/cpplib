@@ -57,12 +57,12 @@ namespace format {
 
                 // enumerations
                 enum compression_type {
-                    BI_RGB,
-                    BI_RLE8,
-                    BI_RLE4,
-                    BI_BITFIELDS,
-                    BI_JPEG,
-                    BI_PNG
+                    NONE = 0,
+                    RUN_LENGTH_8BPP,
+                    RUN_LENGTH_4BPP,
+                    BIT_FIELDS,
+                    JPEG,
+                    PNG
                 };
 
                 // constants
@@ -91,7 +91,7 @@ namespace format {
                       height(e.height),
                       numof_planes(one_plane),
                       bits_per_pixel(bytes_per_pixel * bit),
-                      compression_kind(BI_RGB),
+                      compression_kind(NONE),
                       image_bytes((e.width * bytes_per_pixel + alignment
                                   - ((e.width * bytes_per_pixel) % alignment))
                               * e.height),
@@ -111,7 +111,7 @@ namespace format {
                         return false;
                     }
 
-                    if (compression_kind != BI_RGB) {
+                    if (compression_kind != NONE) {
                         DBGLOG( "I don't treat compressed Windows Bitmap file:"
                                 << compression_kind);
                         return false;
