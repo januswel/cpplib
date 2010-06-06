@@ -94,7 +94,6 @@ namespace util {
                                 const char_type* const delimiter) {
                             unsigned int n =
                                 util::string::count(src, delimiter);
-                            if (n == 0) return result;
 
                             result.resize(n + 1);
                             search_push(src, delimiter, n, result.begin());
@@ -110,7 +109,6 @@ namespace util {
                                 const char_type* const delimiter) {
                             unsigned int n =
                                 util::string::count(src, delimiter);
-                            if (n == 0) return result;
 
                             result.resize(n + 1);
                             result.reserve(n + 1);
