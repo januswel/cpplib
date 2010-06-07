@@ -59,6 +59,22 @@ namespace util {
                 }
 
             public:
+                bool is_positive(const char_type* const str) const {
+                    return !is_negative(str);
+                }
+
+                bool is_positive(const string_type& str) const {
+                    return is_positive(str.c_str());
+                }
+
+                bool is_negative(const char_type* const str) const {
+                    return str[0] == NumTraits::negative;
+                }
+
+                bool is_negative(const string_type& str) const {
+                    return is_negative(str.c_str());
+                }
+
                 bool is_integer(const char_type* const str) const {
                     const char_type* const first =
                         (  (str[0] == NumTraits::positive)
