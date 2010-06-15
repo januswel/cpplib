@@ -15,21 +15,7 @@
 
 namespace util {
     namespace string {
-        template<typename Char> struct numeric_traits;
-        template<> struct numeric_traits<char> {
-            typedef char    char_type;
-            static const char_type positive = '+';
-            static const char_type negative = '-';
-        };
-        template<> struct numeric_traits<wchar_t> {
-            typedef wchar_t char_type;
-            static const char_type positive = L'+';
-            static const char_type negative = L'-';
-        };
-
-        template<   typename Char,
-                    typename CharTraits = std::char_traits<Char>,
-                    typename NumTraits = numeric_traits<Char> >
+        template<typename Char, typename CharTraits = std::char_traits<Char> >
         class basic_check {
             public:
                 typedef Char                            char_type;
@@ -58,6 +44,14 @@ namespace util {
                     return decimal_point;
                 }
 
+                char_type positive_sign(void) const {
+                    return ctype().widen('+');
+                }
+
+                char_type negative_sign(void) const {
+                    return ctype().widen('-');
+                }
+
             public:
                 bool is_positive(const char_type* const str) const {
                     return !is_negative(str);
@@ -68,7 +62,7 @@ namespace util {
                 }
 
                 bool is_negative(const char_type* const str) const {
-                    return str[0] == NumTraits::negative;
+                    return str[0] == negative_sign();
                 }
 
                 bool is_negative(const string_type& str) const {
@@ -77,8 +71,8 @@ namespace util {
 
                 bool is_integer(const char_type* const str) const {
                     const char_type* const first =
-                        (  (str[0] == NumTraits::positive)
-                         | (str[0] == NumTraits::negative)) ? str + 1 : str;
+                        (  (str[0] == positive_sign())
+                         | (str[0] == negative_sign())) ? str + 1 : str;
                     const char_type* const last =
                         first + CharTraits::length(first);
                     const char_type* const found =
@@ -93,8 +87,8 @@ namespace util {
 
                 bool is_decimal(const char_type* const str) const {
                     const char_type* const first =
-                        (  (str[0] == NumTraits::positive)
-                         | (str[0] == NumTraits::negative)) ? str + 1 : str;
+                        (  (str[0] == positive_sign())
+                         | (str[0] == negative_sign())) ? str + 1 : str;
 
                     const char_type* const point =
                         CharTraits::find(   first,
