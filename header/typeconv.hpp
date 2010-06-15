@@ -42,7 +42,7 @@ namespace util {
                 public:
                     // constructor
                     basic_typeconverter(void) {}
-                    explicit basic_typeconverter(std::locale loc) {
+                    explicit basic_typeconverter(const std::locale& loc) {
                         this->imbue(loc);
                     }
 
@@ -50,7 +50,7 @@ namespace util {
                     // This can be omitted specifying T because tye type
                     // inference always works.
                     template<typename T>
-                        string_type strfrom(T src) {
+                        string_type strfrom(const T& src) {
                             this->clear();
                             this->str(Traits::null());
 
