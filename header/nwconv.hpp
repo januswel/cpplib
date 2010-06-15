@@ -47,7 +47,9 @@ namespace util {
 
                 public:
                     // constructor
-                    explicit basic_nwconv(std::locale loc = std::locale("")) : loc(loc) {
+                    explicit
+                    basic_nwconv(const std::locale& loc = std::locale())
+                    : loc(loc) {
                         if (!std::has_facet<codecvt_type>(loc))
                             throw std::logic_error("Specified locale doesn't have codecvt facet.");
                     }

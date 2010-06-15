@@ -7,6 +7,7 @@
  * */
 
 #include <iostream>
+#include <locale>
 #include <string>
 
 #include "../../header/algorithm.hpp"
@@ -19,7 +20,7 @@ using namespace util::string;
 using namespace util::exception;
 
 string second_or_later(const char* const src) {
-    static nwconv conv;
+    static nwconv conv(std::locale(""));
 
     // convert an argument narrow to wide
     wstring arg = conv.ntow(src);
