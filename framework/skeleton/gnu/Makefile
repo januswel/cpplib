@@ -1,7 +1,7 @@
 # Makefile for gnu make
 
 program = sample
-objs = main.o name.o version.o about.o usage.o
+objs = main.o global.o name.o version.o about.o usage.o
 CXX = g++
 #CXXFLAGS = -Wall --pedantic
 CXXFLAGS = -Wall --pedantic -O2 -DNDEBUG
@@ -10,6 +10,9 @@ $(program): $(objs)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^
 
 main.o: ../main.cpp ../sample.hpp ../option.hpp ../main.hpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+global.o: ../global.cpp ../sample.hpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
 
 name.o: ../name.cpp ../sample.hpp
