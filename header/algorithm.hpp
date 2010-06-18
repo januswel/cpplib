@@ -25,10 +25,10 @@ namespace util {
 
         // for binary operation
         struct raw_type { char c; };
-        std::istream& operator >>(std::istream& in, raw_type& r) {
+        inline std::istream& operator >>(std::istream& in, raw_type& r) {
             return in.get(r.c);
         }
-        std::ostream& operator <<(std::ostream& out, const raw_type& r) {
+        inline std::ostream& operator <<(std::ostream& out, const raw_type& r) {
             return out.put(r.c);
         }
 
