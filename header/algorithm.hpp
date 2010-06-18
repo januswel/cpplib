@@ -23,6 +23,15 @@ namespace util {
             void operator()(T* p) { delete p; }
         };
 
+        // for binary operation
+        struct raw_type { char c; };
+        std::istream& operator >>(std::istream& in, raw_type& r) {
+            return in.get(r.c);
+        }
+        std::ostream& operator <<(std::ostream& out, const raw_type& r) {
+            return out.put(r.c);
+        }
+
         // copy_if
         template<   typename InputIterator, typename OstreamIterator,
                     typename Predicate>

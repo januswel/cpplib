@@ -16,6 +16,7 @@
 #include <locale>
 #include <string>
 #include <vector>
+#include <fstream>
 
 template<typename Char>
 inline bool is(const std::ctype_base::mask mask, const Char c) {
@@ -108,6 +109,12 @@ int main(const int argc, const char* const argv[]) {
             std::cout, "\n",
             util::algorithm::basic_progress<std::string, unsigned int>(
                 std::cerr, 1, params.size()));
+
+    std::cout << "binary operation\n";
+    std::ifstream fin("main.cpp", std::ios_base::binary);
+    std::istream_iterator<util::algorithm::raw_type> iitr(fin), end;
+    util::algorithm::print<util::algorithm::raw_type>(iitr, end, std::cout, "");
+
     std::cerr << std::endl;
 
     return 0;
