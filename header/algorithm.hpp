@@ -151,6 +151,59 @@ namespace util {
                 util::algorithm::copy_if(first, last, result.begin(), pred);
                 return result;
             }
+
+        /*
+         *  A class to show progress
+         *  Usage:
+         *
+         *      std::transform(
+         *          longlongstring.begin(), longlongstring.end(),
+         *          std::ostream_iterator<char>(std::cout),
+         *          basic_progress<char, unsigned int>(
+         *              std::cerr, 4096, numof_data));
+         * */
+        template<typename Result, typename Base>
+            class basic_progress {
+                public:
+                    typedef Result  result_type;
+                    typedef Base    base_type;
+
+                protected:
+                    std::ostream* out;
+                    base_type frequency;
+                    base_type denominator;
+                    base_type numerator;
+
+                public:
+                    basic_progress(
+                            std::ostream& out,
+                            const base_type& frequency,
+                            const base_type& denominator,
+                            const base_type& numerator = 0)
+                        : out(&out), frequency(frequency),
+                          denominator(denominator), numerator(numerator) {}
+
+                    result_type operator()(const result_type& result) {
+                        ++numerator;
+                        if (       numerator % frequency == 0
+                                || numerator == denominator) {
+                            output(*out, numerator, denominator);
+                        }
+                        return result;
+                    }
+
+                protected:
+                    virtual void output( std::ostream& out,
+                            const base_type& numerator,
+                            const base_type& denominator) {
+                        double percentage =
+                            static_cast<double>(numerator) / denominator * 100;
+                        out
+                            << "\r"
+                            << numerator << "/" << denominator << " samples"
+                            << " (" << percentage << "%)";
+                    }
+            };
     }
 }
 

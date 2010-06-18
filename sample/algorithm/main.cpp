@@ -97,6 +97,19 @@ int main(const int argc, const char* const argv[]) {
     for (int i = 0; i < 3; ++i) os.push_back(new o);
     std::for_each(os.begin(), os.end(), util::algorithm::sweeper());
 
+    /*  to get accurate outputs, execute as following
+     *
+     *      > main foo bar buz > nul
+     *      > ./a.out foo bar buz > /dev/null
+     * */
+    std::cerr << "with progress\n";
+    util::algorithm::print_op<std::string>(
+            params.begin(), params.end(),
+            std::cout, "\n",
+            util::algorithm::basic_progress<std::string, unsigned int>(
+                std::cerr, 1, params.size()));
+    std::cerr << std::endl;
+
     return 0;
 }
 
