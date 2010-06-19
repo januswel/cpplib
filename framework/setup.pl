@@ -7,9 +7,10 @@ use utf8;
 use File::Copy;
 
 my $skeleton_dir = './skeleton';
-my $replace_target = 'sample';
+my $replace_target_l = 'sample';
+my $replace_target_u = 'SAMPLE';
 my $replace_ext = '.hpp';
-my $rename_file = $replace_target . $replace_ext;
+my $rename_file = $replace_target_l . $replace_ext;
 my $header_dir = '../header';
 my $helper_dir = 'helper';
 my @headers = qw(getopt.hpp event.hpp typeconv.hpp cor.hpp string.hpp);
@@ -38,6 +39,7 @@ sub main {
 
 sub setup {
     my ($from_dir, $to_dir, $name) = @_;
+    my $name_u = uc $name;
     opendir my($dh), $from_dir or die "Could not open dir '$from_dir': $!";
     for my $entry (readdir $dh) {
         next if $entry =~ /^\.{1,2}$/;
@@ -51,7 +53,7 @@ sub setup {
         } else {
             print "Copying $src to $dst\n";
             copy($src, $dst) or die "copy failed: $!";
-            system qq(perl -pi.bak -e "s/$replace_target/$name/g" $dst);
+            system qq(perl -pi.bak -e "s/$replace_target_l/$name/g; s/$replace_target_u/$name_u/g" $dst);
             unlink $dst . ".bak";
         }
     }
