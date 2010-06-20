@@ -55,8 +55,8 @@ namespace util {
 
                 // getters
                 const const_iterator& current(void) const { return mv_current; }
-                const const_iterator begin(void) const { return mv_array->begin(); }
-                const const_iterator end(void) const { return mv_array->end(); }
+                const_iterator begin(void) const { return mv_array->begin(); }
+                const_iterator end(void) const { return mv_array->end(); }
                 const string_array_type& operator()(void) const { return *mv_array; }
 
                 // positioning
@@ -259,13 +259,13 @@ namespace util {
 
             public:
                 // utilities
-                this_t& register_option(option_type& option) {
-                    enlink_chain(option);
+                this_t& register_option(option_type& opt) {
+                    this->enlink_chain(opt);
                     return *this;
                 }
 
-                this_t& register_option(option_type* option) {
-                    enlink_chain(option);
+                this_t& register_option(option_type* opt) {
+                    this->enlink_chain(opt);
                     return *this;
                 }
 
@@ -274,7 +274,7 @@ namespace util {
                     parameters_type params(data);
                     unsigned int processed = 0;
                     while (params.current() != params.end()) {
-                        unsigned int n = request_to_chain(params);
+                        unsigned int n = this->request_to_chain(params);
                         assert(n != 0);
                         params.advance(n);
                         processed += n;

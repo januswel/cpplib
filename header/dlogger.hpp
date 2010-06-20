@@ -5,7 +5,7 @@
  *  In order to disable, define the symbol NDEBUG:
  *
  *      > g++ -Wall --pedantic -DNDEBUG main.cpp
- *      > cl /EHsc /W4 /DNDEBUG main.cpp
+ *      > cl /EHsc /W4 /Za /DNDEBUG main.cpp
  *
  *  written by janus_wel<janus.wel.3@gmail.com>
  *  This source code is in public domain, and has NO WARRANTY.
