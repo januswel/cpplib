@@ -112,6 +112,16 @@ int main(const int argc, const char* const argv[]) {
 
     std::cerr << std::endl;
 
+    // counter
+    // from 0, increment 1
+    std::generate_n(
+            std::ostream_iterator<unsigned int>(std::cout, "\n"), 10,
+            util::algorithm::counter<unsigned int>(0, 1));
+    // from 0.1, increment 0.3
+    std::generate_n(
+            std::ostream_iterator<double>(std::cout, "\n"), 10,
+            util::algorithm::counter<double>(0.1, 0.3));
+
     return 0;
 }
 

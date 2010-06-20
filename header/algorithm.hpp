@@ -23,6 +23,28 @@ namespace util {
             void operator()(T* p) { delete p; }
         };
 
+        // for std::generate() and std::generate_n()
+        template<typename T> class counter {
+            public:
+                typedef T   count_type;
+
+            private:
+                count_type first, returned;
+                const count_type increment;
+
+            public:
+                counter(count_type first, count_type increment)
+                    : first(first), increment(increment) {}
+                count_type operator()(void) {
+                    returned = first;
+                    first += increment;
+                    return returned;
+                }
+
+            private:
+                counter& operator=(const counter& rhs);
+        };
+
         // copy_if
         template<   typename InputIterator, typename OstreamIterator,
                     typename Predicate>
