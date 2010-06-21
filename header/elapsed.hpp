@@ -2,8 +2,8 @@
  * elapsed.hpp
  *  a class to measure time that has second precision
  *
- *  written by janus_wel<janus.wel.3@gmail.com>
- *  This source code is in the public domain, and has NO WARRANTY.
+ *  Copyright (C) 2010 janus_wel<janus.wel.3@gmail.com>
+ *  see LICENSE for redistributing, modifying, and so on.
  * */
 
 #ifndef ELAPSED_HPP

@@ -2,8 +2,8 @@
  * cor.hpp
  *  the base classes for Chain of Responsibility pattern of GoF design patterns
  *
- *  written by janus_wel<janus.wel.3@gmail.com>
- *  This source code is in public domain, and has NO WARRANTY.
+ *  Copyright (C) 2010 janus_wel<janus.wel.3@gmail.com>
+ *  see LICENSE for redistributing, modifying, and so on.
  * */
 
 #ifndef COR_HPP

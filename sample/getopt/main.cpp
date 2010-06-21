@@ -10,8 +10,8 @@
  *          - g++ -Wall --pedantic -O2 -DNDEBUG main.cpp
  *          - cl /EHsc /W4 /O2 /DNDEBUG main.cpp
  *
- *  written by janus_wel<janus.wel.3@gmail.com>
- *  This source code is in public domain, and has NO WARRANTY.
+ *  Copyright (C) 2010 janus_wel<janus.wel.3@gmail.com>
+ *  see LICENSE for redistributing, modifying, and so on.
  * */
 
 #include "../../header/dlogger.hpp"

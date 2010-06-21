@@ -2,8 +2,8 @@
  * main.cpp
  *  print the informations of some codecvt facets
  *
- *  written by janus_wel<janus.wel.3@gmail.com>
- *  This source code is in public domain, and has NO WARRANTY.
+ *  Copyright (C) 2010 janus_wel<janus.wel.3@gmail.com>
+ *  see LICENSE for redistributing, modifying, and so on.
  * */
 
 #include <iomanip>

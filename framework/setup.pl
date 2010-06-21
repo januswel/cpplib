@@ -1,5 +1,11 @@
 #!/usr/bin/perl
 
+# setup.pl
+#  a script to set up a new program
+#
+#  Copyright (C) 2010 janus_wel<janus.wel.3@gmail.com>
+#  see LICENSE for redistributing, modifying, and so on.
+
 use strict;
 use warnings;
 use utf8;

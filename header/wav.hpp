@@ -2,8 +2,8 @@
  * wav.hpp
  *  A struct to read / write headers in the form of RIFF WAV linear PCM
  *
- *  written by janus_wel<janus.wel.3@gmail.com>
- *  This source code is in public domain, and has NO WARRANTY.
+ *  Copyright (C) 2010 janus_wel<janus.wel.3@gmail.com>
+ *  see LICENSE for redistributing, modifying, and so on.
  *
  * refer
  *  RIFF WAV specifications
