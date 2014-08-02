@@ -21,10 +21,10 @@ int main(void) {
         << endl;
 
     // data
-    __int32 n = 0x12345678;
+    int32_t n = 0x12345678;
 
     // non-destructive but slow
-    __int32 r = reverse(n);
+    int32_t r = reverse(n);
     cout.write(pointer_cast<char*>(&n), sizeof(n));
     cout.write(pointer_cast<char*>(&r), sizeof(r));
     cout << endl;
